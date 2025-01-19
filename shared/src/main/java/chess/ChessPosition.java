@@ -55,4 +55,18 @@ public class ChessPosition {
     public int getColumn() {
         return col;
     }
+
+    /**
+     * @return 0-indexed row for this position
+     */
+    public int getRowIndex() {
+        return row - 1;
+    }
+
+    /**
+     * @return 0-indexed col for this position
+     */
+    public int getColumnIndex() {
+        return col - 1;
+    }
 }
