@@ -14,7 +14,7 @@ import static chess.CalculateMoves.MoveType.DIAGONAL;
  */
 public class ChessPiece {
 
-    private ChessGame.TeamColor color;
+    private final ChessGame.TeamColor color;
     private PieceType type;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
@@ -53,7 +53,7 @@ public class ChessPiece {
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        throw new RuntimeException("Not implemented");
+        return type;
     }
 
     @Override
@@ -86,11 +86,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        ArrayList<ChessMove> moves = getPositiveDiagonalMoves(board, myPosition);
-        System.out.println(moves);
-        moves.addAll(getNegativeDiagonalMoves(board, myPosition));
-        System.out.println(moves);
-        return moves;
+        return CalculateMoves.getMoves(board, this, myPosition);
     }
 
     /**

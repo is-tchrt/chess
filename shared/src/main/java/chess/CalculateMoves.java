@@ -17,7 +17,7 @@ public class CalculateMoves {
         }
     }
 
-    public ArrayList<ChessMove> getMoves(ChessBoard board, ChessPiece piece, ChessPosition position) {
+    public static ArrayList<ChessMove> getMoves(ChessBoard board, ChessPiece piece, ChessPosition position) {
         ArrayList<ChessMove> moves;
         if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
             moves = new ArrayList<>();
@@ -27,7 +27,7 @@ public class CalculateMoves {
         return moves;
     }
 
-    private ArrayList<ChessMove> getNonPawnMoves(ChessBoard board, ChessPiece piece, ChessPosition position) {
+    private static ArrayList<ChessMove> getNonPawnMoves(ChessBoard board, ChessPiece piece, ChessPosition position) {
         ArrayList<ChessMove> moves = new ArrayList<>();
         for (MoveType moveType : piece.getPieceType().moveTypes) {
             moves.addAll(getMovesByType(board, piece, position, moveType));
@@ -35,7 +35,7 @@ public class CalculateMoves {
         return moves;
     }
 
-    private ArrayList<ChessMove> getMovesByType(ChessBoard board, ChessPiece piece, ChessPosition position, MoveType moveType) {
+    private static ArrayList<ChessMove> getMovesByType(ChessBoard board, ChessPiece piece, ChessPosition position, MoveType moveType) {
         ArrayList<ChessMove> moves = new ArrayList<>();
         for (int[] step : moveType.steps) {
             moves.addAll(getMovesByStep(board, piece, position, step));
@@ -44,7 +44,7 @@ public class CalculateMoves {
     }
 
 
-    private ArrayList<ChessMove> getMovesByStep(ChessBoard board, ChessPiece piece, ChessPosition position, int[] step) {
+    private static ArrayList<ChessMove> getMovesByStep(ChessBoard board, ChessPiece piece, ChessPosition position, int[] step) {
         ChessPosition nextPosition = new ChessPosition(position.getRow() + step[0], position.getColumn() + step[1]);
         ArrayList<ChessMove> moves = new ArrayList<>();
         boolean repeat = piece.getPieceType().repeated;
