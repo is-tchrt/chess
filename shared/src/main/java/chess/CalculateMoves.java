@@ -41,10 +41,17 @@ public class CalculateMoves {
         ArrayList<ChessMove> moves = new ArrayList<>();
         ChessPosition forwardOne = new ChessPosition(position.getRow() + 1, position.getColumn());
         if (board.getPiece(forwardOne) == null) {
-            moves.add(new ChessMove(position, forwardOne, null));
-            ChessPosition forwardTwo = new ChessPosition(position.getRow() + 2, position.getColumn());
-            if (position.getRow() == 2 && board.getPiece(forwardTwo) == null) {
-                moves.add(new ChessMove(position, forwardTwo, null));
+            if (position.getRow() == 7) {
+                moves.add(new ChessMove(position, forwardOne, ChessPiece.PieceType.QUEEN));
+                moves.add(new ChessMove(position, forwardOne, ChessPiece.PieceType.BISHOP));
+                moves.add(new ChessMove(position, forwardOne, ChessPiece.PieceType.KNIGHT));
+                moves.add(new ChessMove(position, forwardOne, ChessPiece.PieceType.ROOK));
+            } else {
+                moves.add(new ChessMove(position, forwardOne, null));
+                ChessPosition forwardTwo = new ChessPosition(position.getRow() + 2, position.getColumn());
+                if (position.getRow() == 2 && board.getPiece(forwardTwo) == null) {
+                    moves.add(new ChessMove(position, forwardTwo, null));
+                }
             }
         }
         return moves;
@@ -54,10 +61,17 @@ public class CalculateMoves {
         ArrayList<ChessMove> moves = new ArrayList<>();
         ChessPosition forwardOne = new ChessPosition(position.getRow() - 1, position.getColumn());
         if (board.getPiece(forwardOne) == null) {
-            moves.add(new ChessMove(position, forwardOne, null));
-            ChessPosition forwardTwo = new ChessPosition(position.getRow() - 2, position.getColumn());
-            if (position.getRow() == 7 && board.getPiece(forwardTwo) == null) {
-                moves.add(new ChessMove(position, forwardTwo, null));
+            if (position.getRow() == 2) {
+                moves.add(new ChessMove(position, forwardOne, ChessPiece.PieceType.QUEEN));
+                moves.add(new ChessMove(position, forwardOne, ChessPiece.PieceType.BISHOP));
+                moves.add(new ChessMove(position, forwardOne, ChessPiece.PieceType.KNIGHT));
+                moves.add(new ChessMove(position, forwardOne, ChessPiece.PieceType.ROOK));
+            } else {
+                moves.add(new ChessMove(position, forwardOne, null));
+                ChessPosition forwardTwo = new ChessPosition(position.getRow() - 2, position.getColumn());
+                if (position.getRow() == 7 && board.getPiece(forwardTwo) == null) {
+                    moves.add(new ChessMove(position, forwardTwo, null));
+                }
             }
         }
         return moves;
