@@ -39,13 +39,27 @@ public class CalculateMoves {
 
     private static ArrayList<ChessMove> getPawnMovesWhite(ChessBoard board, ChessPiece piece, ChessPosition position) {
         ArrayList<ChessMove> moves = new ArrayList<>();
-        moves.add(new ChessMove(position, new ChessPosition(position.getRow() + 1, position.getColumn()), null));
+        ChessPosition forwardOne = new ChessPosition(position.getRow() + 1, position.getColumn());
+        if (board.getPiece(forwardOne) == null) {
+            moves.add(new ChessMove(position, forwardOne, null));
+            ChessPosition forwardTwo = new ChessPosition(position.getRow() + 2, position.getColumn());
+            if (position.getRow() == 2 && board.getPiece(forwardTwo) == null) {
+                moves.add(new ChessMove(position, forwardTwo, null));
+            }
+        }
         return moves;
     }
 
     private static ArrayList<ChessMove> getPawnMovesBlack(ChessBoard board, ChessPiece piece, ChessPosition position) {
         ArrayList<ChessMove> moves = new ArrayList<>();
-        moves.add(new ChessMove(position, new ChessPosition(position.getRow() - 1, position.getColumn()), null));
+        ChessPosition forwardOne = new ChessPosition(position.getRow() - 1, position.getColumn());
+        if (board.getPiece(forwardOne) == null) {
+            moves.add(new ChessMove(position, forwardOne, null));
+            ChessPosition forwardTwo = new ChessPosition(position.getRow() - 2, position.getColumn());
+            if (position.getRow() == 7 && board.getPiece(forwardTwo) == null) {
+                moves.add(new ChessMove(position, forwardTwo, null));
+            }
+        }
         return moves;
     }
 
