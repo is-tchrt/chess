@@ -31,10 +31,10 @@ public class ChessPiece {
         ROOK (new CalculateMoves.MoveType[] {CalculateMoves.MoveType.SQUARE}, true),
         PAWN (new CalculateMoves.MoveType[] {CalculateMoves.MoveType.PAWN}, false);
 
-        public CalculateMoves.MoveType[] moveTypes;
-        public boolean repeated;
+        public final CalculateMoves.MoveType[] moveTypes;
+        public final boolean repeated;
 
-        private PieceType(CalculateMoves.MoveType[] moveTypes, boolean repeated) {
+        PieceType(CalculateMoves.MoveType[] moveTypes, boolean repeated) {
             this.moveTypes = moveTypes;
             this.repeated = repeated;
         }
@@ -85,67 +85,5 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         return CalculateMoves.getMoves(board, this, myPosition);
-    }
-
-    /**
-     * Calculates all possible diagonal moves on the positive-sloped diagonal
-     *
-     * @param position Current piece position
-     * @return Collection of valid moves
-     */
-    public ArrayList<ChessMove> getPositiveDiagonalMoves(ChessBoard board, ChessPosition position) {
-        int rowColumnDifference = position.getRow() - position.getColumn();
-        int row;
-        int col;
-
-        //Calculate where the positive diagonal meets the board edge and set the initial
-        //row and column coordinates accordingly
-        if (rowColumnDifference >= 0) {
-            row = rowColumnDifference;
-            col = 1;
-        } else {
-            row = 1;
-            col = (-1 * rowColumnDifference) + 1;
-        }
-
-        return getMovesByStep(row, col, 1, 1, board, position);
-    }
-
-    /**
-     * Calculates all possible diagonal moves on the negative-sloped diagonal
-     *
-     * @param position Current piece position
-     * @return Collection of possible moves
-     */
-    public ArrayList<ChessMove> getNegativeDiagonalMoves(ChessBoard board, ChessPosition position) {
-        int rowColumnDifference = (9 - position.getRow()) - position.getColumn(); //Use 9 so that we get the number of rows from the top to the current position
-        int row;
-        int col;
-        if (rowColumnDifference >= 0) {
-            row = 8 - rowColumnDifference;
-            col = 1;
-        } else {
-            row = 8;
-            col = (-1 * rowColumnDifference) + 1;
-        }
-
-        return getMovesByStep(row, col, -1, 1, board, position);
-    }
-
-    public ArrayList<ChessMove> getMovesByStep(int startRow, int startCol, int rowStep, int colStep, ChessBoard board, ChessPosition position) {
-        int currentRow = startRow;
-        int currentCol = startCol;
-        System.out.println("row " + startRow + " col " + startCol + " rowStep " + rowStep);
-        ArrayList<ChessMove> moves = new ArrayList<>();
-        while (currentRow <= 8 && currentRow >= 0 && currentCol <= 8 && currentCol >= 0) {
-            System.out.println(currentRow);
-            if (currentRow != position.getRow() && board.getPiece(new ChessPosition(currentRow, currentCol)) == null) {
-                moves.add(new ChessMove(position, new ChessPosition(currentRow, currentCol), null));
-            }
-            currentRow += rowStep;
-            System.out.println(currentRow);
-            currentCol += colStep;
-        }
-        return moves;
     }
 }

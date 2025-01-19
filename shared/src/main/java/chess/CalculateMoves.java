@@ -10,9 +10,9 @@ public class CalculateMoves {
         PAWN(new int[][] {{}}),
         KNIGHT(new int[][] {{2, 1}, {2, -1}, {-2, 1}, {-2, -1}, {1, 2}, {1, -2}, {-1, 2}, {-1, -2}});
 
-        private int[][] steps;
+        private final int[][] steps;
 
-        private MoveType(int[][] steps) {
+        MoveType(int[][] steps) {
             this.steps = steps;
         }
     }
