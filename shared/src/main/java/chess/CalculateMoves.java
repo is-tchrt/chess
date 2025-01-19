@@ -20,10 +20,32 @@ public class CalculateMoves {
     public static ArrayList<ChessMove> getMoves(ChessBoard board, ChessPiece piece, ChessPosition position) {
         ArrayList<ChessMove> moves;
         if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
-            moves = new ArrayList<>();
+            moves = getPawnMoves(board, piece, position);
         } else {
             moves = getNonPawnMoves(board, piece, position);
         }
+        return moves;
+    }
+
+    private static ArrayList<ChessMove> getPawnMoves(ChessBoard board, ChessPiece piece, ChessPosition position) {
+        ArrayList<ChessMove> moves;
+        if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            moves = getPawnMovesWhite(board, piece, position);
+        } else {
+            moves = getPawnMovesBlack(board, piece, position);
+        }
+        return moves;
+    }
+
+    private static ArrayList<ChessMove> getPawnMovesWhite(ChessBoard board, ChessPiece piece, ChessPosition position) {
+        ArrayList<ChessMove> moves = new ArrayList<>();
+        moves.add(new ChessMove(position, new ChessPosition(position.getRow() + 1, position.getColumn()), null));
+        return moves;
+    }
+
+    private static ArrayList<ChessMove> getPawnMovesBlack(ChessBoard board, ChessPiece piece, ChessPosition position) {
+        ArrayList<ChessMove> moves = new ArrayList<>();
+        moves.add(new ChessMove(position, new ChessPosition(position.getRow() - 1, position.getColumn()), null));
         return moves;
     }
 
