@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-import static chess.CalculateMoves.MoveType.DIAGONAL;
-
 /**
  * Represents a single chess piece
  * <p>
@@ -14,11 +12,11 @@ import static chess.CalculateMoves.MoveType.DIAGONAL;
  */
 public class ChessPiece {
 
-    private final ChessGame.TeamColor color;
+    private final ChessGame.TeamColor teamColor;
     private PieceType type;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
-        this.color = pieceColor;
+        this.teamColor = pieceColor;
         this.type = type;
     }
 
@@ -46,7 +44,7 @@ public class ChessPiece {
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        throw new RuntimeException("Not implemented");
+        return teamColor;
     }
 
     /**
@@ -62,18 +60,18 @@ public class ChessPiece {
             return false;
         }
         ChessPiece that = (ChessPiece) o;
-        return color == that.color && type == that.type;
+        return teamColor == that.teamColor && type == that.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(color, type);
+        return Objects.hash(teamColor, type);
     }
 
     @Override
     public String toString() {
         return "ChessPiece{" +
-                "color=" + color +
+                "color=" + teamColor +
                 ", type=" + type +
                 '}';
     }
