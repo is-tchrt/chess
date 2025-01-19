@@ -59,7 +59,11 @@ public class CalculateMoves {
             } else {
                 moves.add(new ChessMove(position, nextPosition, null));
             }
-            nextPosition = new ChessPosition(nextPosition.getRow() + step[0], nextPosition.getColumn() + step[1]);
+            if (!repeat) {
+                break;
+            } else {
+                nextPosition = new ChessPosition(nextPosition.getRow() + step[0], nextPosition.getColumn() + step[1]);
+            }
         }
         return moves;
     }
