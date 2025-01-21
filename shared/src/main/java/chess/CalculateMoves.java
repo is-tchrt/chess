@@ -32,35 +32,40 @@ public class CalculateMoves {
         ArrayList<ChessMove> moves = new ArrayList<>();
         ChessPosition forwardOne = new ChessPosition(position.getRow() + piece.getTeamColor().pawnStep, position.getColumn());
         if (board.getPiece(forwardOne) == null) {
-            if (position.getRow() == piece.getTeamColor().secondToLastRow) {
-                moves.addAll(getPawnPromotionMoves(position, forwardOne));
-            } else {
-                moves.add(new ChessMove(position, forwardOne, null));
-                ChessPosition forwardTwo = new ChessPosition(position.getRow() + (2 * piece.getTeamColor().pawnStep), position.getColumn());
-                if (position.getRow() == piece.getTeamColor().secondRow && board.getPiece(forwardTwo) == null) {
-                    moves.add(new ChessMove(position, forwardTwo, null));
-                }
+            moves.addAll(getPawnPromotionOrNormalMoves(piece, position, forwardOne));
+
+            ChessPosition forwardTwo = new ChessPosition(position.getRow() + (2 * piece.getTeamColor().pawnStep), position.getColumn());
+            if (position.getRow() == piece.getTeamColor().secondRow && board.getPiece(forwardTwo) == null) {
+                moves.add(new ChessMove(position, forwardTwo, null));
             }
         }
         if (position.getColumn() > 1) {
             ChessPosition forwardLeft = new ChessPosition(position.getRow() + piece.getTeamColor().pawnStep, position.getColumn() - 1);
-            if (board.getPiece(forwardLeft) != null && board.getPiece(forwardLeft).getTeamColor() != piece.getTeamColor()) {
-                if (position.getRow() == piece.getTeamColor().secondToLastRow) {
-                    moves.addAll(getPawnPromotionMoves(position, forwardLeft));
-                } else {
-                    moves.add(new ChessMove(position, forwardLeft, null));
-                }
-            }
+            moves.addAll(getPawnCaptureMoves(board, piece, position, forwardLeft));
         }
         if (position.getColumn() < 8) {
             ChessPosition forwardRight = new ChessPosition(position.getRow() + piece.getTeamColor().pawnStep, position.getColumn() + 1);
-            if (board.getPiece(forwardRight) != null && board.getPiece(forwardRight).getTeamColor() != piece.getTeamColor()) {
-                if (position.getRow() == piece.getTeamColor().secondToLastRow) {
-                    moves.addAll(getPawnPromotionMoves(position, forwardRight));
-                } else {
-                    moves.add(new ChessMove(position, forwardRight, null));
-                }
-            }
+            moves.addAll(getPawnCaptureMoves(board, piece, position, forwardRight));
+        }
+        return moves;
+    }
+
+
+    private static ArrayList<ChessMove> getPawnCaptureMoves(ChessBoard board, ChessPiece piece, ChessPosition position, ChessPosition newPosition) {
+        ArrayList<ChessMove> moves = new ArrayList<>();
+        if (board.getPiece(newPosition) != null && board.getPiece(newPosition).getTeamColor() != piece.getTeamColor()) {
+            moves = getPawnPromotionOrNormalMoves(piece, position, newPosition);
+        }
+        return moves;
+    }
+
+
+    private static ArrayList<ChessMove> getPawnPromotionOrNormalMoves(ChessPiece piece, ChessPosition position, ChessPosition newPosition) {
+        ArrayList<ChessMove> moves = new ArrayList<>();
+        if (position.getRow() == piece.getTeamColor().secondToLastRow) {
+            moves = getPawnPromotionMoves(position, newPosition);
+        } else {
+            moves.add(new ChessMove(position, newPosition, null));
         }
         return moves;
     }
