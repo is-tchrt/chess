@@ -34,8 +34,18 @@ public class ChessGame {
      * Enum identifying the 2 possible teams in a chess game
      */
     public enum TeamColor {
-        WHITE,
-        BLACK
+        WHITE(1, 2, 7),
+        BLACK(-1, 7, 2);
+
+        public final int pawnStep;
+        public final int secondRow;
+        public final int secondToLastRow;
+
+        TeamColor(int pawnStep, int secondRow, int secondToLastRow) {
+            this.pawnStep = pawnStep;
+            this.secondRow = secondRow;
+            this.secondToLastRow = secondToLastRow;
+        }
     }
 
     /**
