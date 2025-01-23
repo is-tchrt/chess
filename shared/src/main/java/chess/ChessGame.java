@@ -34,17 +34,19 @@ public class ChessGame {
      * Enum identifying the 2 possible teams in a chess game
      */
     public enum TeamColor {
-        WHITE(1, 2, 7),
-        BLACK(-1, 7, 2);
+        WHITE(1, 2, 7, 1),
+        BLACK(8, 7, 2, -1);
 
-        public final int pawnStep;
+        public final int firstRow;
         public final int secondRow;
         public final int secondToLastRow;
+        public final int pawnStep;
 
-        TeamColor(int pawnStep, int secondRow, int secondToLastRow) {
-            this.pawnStep = pawnStep;
+        TeamColor(int firstRow, int secondRow, int secondToLastRow, int pawnStep) {
+            this.firstRow = firstRow;
             this.secondRow = secondRow;
             this.secondToLastRow = secondToLastRow;
+            this.pawnStep = pawnStep;
         }
     }
 

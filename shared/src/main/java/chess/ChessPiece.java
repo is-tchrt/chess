@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -23,19 +24,21 @@ public class ChessPiece {
      * The various different chess piece options
      */
     public enum PieceType {
-        KING (new CalculateMoves.MoveType[] {CalculateMoves.MoveType.DIAGONAL, CalculateMoves.MoveType.SQUARE}, false),
-        QUEEN (new CalculateMoves.MoveType[] {CalculateMoves.MoveType.DIAGONAL, CalculateMoves.MoveType.SQUARE}, true),
-        BISHOP (new CalculateMoves.MoveType[] {CalculateMoves.MoveType.DIAGONAL}, true),
-        KNIGHT (new CalculateMoves.MoveType[] {CalculateMoves.MoveType.KNIGHT}, false),
-        ROOK (new CalculateMoves.MoveType[] {CalculateMoves.MoveType.SQUARE}, true),
-        PAWN (new CalculateMoves.MoveType[] {CalculateMoves.MoveType.PAWN}, false);
+        KING (new CalculateMoves.MoveType[] {CalculateMoves.MoveType.DIAGONAL, CalculateMoves.MoveType.SQUARE}, false, new int[] {5}),
+        QUEEN (new CalculateMoves.MoveType[] {CalculateMoves.MoveType.DIAGONAL, CalculateMoves.MoveType.SQUARE}, true, new int[] {4}),
+        BISHOP (new CalculateMoves.MoveType[] {CalculateMoves.MoveType.DIAGONAL}, true, new int[] {3, 6}),
+        KNIGHT (new CalculateMoves.MoveType[] {CalculateMoves.MoveType.KNIGHT}, false, new int[] {2, 7}),
+        ROOK (new CalculateMoves.MoveType[] {CalculateMoves.MoveType.SQUARE}, true, new int[] {1, 8}),
+        PAWN (new CalculateMoves.MoveType[] {CalculateMoves.MoveType.PAWN}, false, new int[] {1, 2, 3, 4, 5, 6, 7, 8});
 
         public final CalculateMoves.MoveType[] moveTypes;
         public final boolean repeated;
+        public final int[] initialColumns;
 
-        PieceType(CalculateMoves.MoveType[] moveTypes, boolean repeated) {
+        PieceType(CalculateMoves.MoveType[] moveTypes, boolean repeated, int[] initialColumns) {
             this.moveTypes = moveTypes;
             this.repeated = repeated;
+            this.initialColumns = initialColumns;
         }
     }
 

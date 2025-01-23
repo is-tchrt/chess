@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -35,11 +38,45 @@ public class ChessBoard {
         return board[position.getRowIndex()][position.getColumnIndex()];
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessBoard that = (ChessBoard) o;
+        return Objects.deepEquals(board, that.board);
+    }
+
+    @Override
+    public String toString() {
+        return "ChessBoard{" +
+                "board=" + Arrays.toString(board) +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(board);
+    }
+
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        for (ChessPiece.PieceType pieceType : ChessPiece.PieceType.values()) {
+            addPieceByType(ChessGame.TeamColor.WHITE, pieceType);
+            addPieceByType(ChessGame.TeamColor.BLACK, pieceType);
+        }
+    }
+
+    private void addPieceByType(ChessGame.TeamColor teamColor, ChessPiece.PieceType pieceType) {
+        for (int column : pieceType.initialColumns) {
+            if (pieceType == ChessPiece.PieceType.PAWN) {
+                addPiece(new ChessPosition(teamColor.secondRow, column), new ChessPiece(teamColor, pieceType));
+            } else {
+                addPiece(new ChessPosition(teamColor.firstRow, column), new ChessPiece(teamColor, pieceType));
+            }
+        }
     }
 }
