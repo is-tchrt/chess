@@ -18,6 +18,10 @@ public class ChessBoard {
         resetBoard();
     }
 
+    public ChessBoard(ChessBoard toCopy) {
+        board = toCopy.board;
+    }
+
     /**
      * Adds a chess piece to the chessboard
      *
