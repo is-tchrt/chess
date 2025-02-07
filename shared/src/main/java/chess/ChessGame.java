@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -16,6 +17,11 @@ public class ChessGame {
     public ChessGame() {
         teamTurn = TeamColor.WHITE;
         board = new ChessBoard();
+    }
+
+    public ChessGame(ChessGame toCopy) {
+        teamTurn = toCopy.getTeamTurn();
+        board = toCopy.getBoard();
     }
 
     /**
@@ -62,7 +68,14 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = board.getPiece(startPosition);
+        Collection<ChessMove> moves = piece.pieceMoves(board, startPosition);
+        ChessBoard tempBoard = new ChessBoard(board);
+        ChessGame tempGame = new ChessGame();
+        tempGame.setBoard(tempBoard);
+        tempGame.setTeamTurn(teamTurn);
+        moves.removeIf(this::resultsInCheck);
+        return moves;
     }
 
     /**
@@ -82,7 +95,13 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessPosition kingPosition = getKingPosition(teamColor);
+        Collection<ChessMove> moves = getEnemyMoves(teamColor);
+        Collection<ChessPosition> endPositions = new ArrayList<>();
+        for (ChessMove move : moves) {
+            endPositions.add(move.getEndPosition());
+        }
+        return endPositions.contains(kingPosition);
     }
 
     /**
@@ -122,5 +141,45 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return board;
+    }
+
+    private boolean resultsInCheck(ChessMove move) {
+        ChessGame tempGame = new ChessGame(this);
+        ChessPiece piece = tempGame.getBoard().getPiece(move.getStartPosition());
+        tempGame.getBoard().addPiece(move.getEndPosition(), piece);
+        tempGame.getBoard().addPiece(move.getStartPosition(), null);
+        boolean isCheck =  tempGame.isInCheck(getTeamTurn());
+        tempGame.getBoard().addPiece(move.getEndPosition(), null);
+        tempGame.getBoard().addPiece(move.getStartPosition(), piece);
+        System.out.println(isCheck);
+        return isCheck;
+    }
+
+    private Collection<ChessMove> getEnemyMoves(TeamColor teamColor) {
+        Collection<ChessMove> moves = new ArrayList<>();
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition position = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(position);
+                if (piece != null && piece.getTeamColor() != teamColor) {
+                    moves.addAll(piece.pieceMoves(board, position));
+                }
+            }
+        }
+        return moves;
+    }
+
+    private ChessPosition getKingPosition(TeamColor teamColor) {
+        ChessPosition kingPosition = null;
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition position = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(position);
+                if (piece != null && piece.getTeamColor() == teamColor && piece.getPieceType() == ChessPiece.PieceType.KING) {
+                    kingPosition = position;
+                }
+            }
+        }
+        return kingPosition;
     }
 }
