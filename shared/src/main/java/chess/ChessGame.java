@@ -118,7 +118,11 @@ public class ChessGame {
         ChessPiece piece = board.getPiece(move.getStartPosition());
         if (validMoves.contains(move) && piece.getTeamColor() == teamTurn) {
             board.addPiece(move.getStartPosition(), null);
-            board.addPiece(move.getEndPosition(), piece);
+            if (move.getPromotionPiece() == null) {
+                board.addPiece(move.getEndPosition(), piece);
+            } else {
+                board.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
+            }
             teamTurn = teamTurn.getOpposite();
         } else {
             throw new InvalidMoveException("Invalid Move");
