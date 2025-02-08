@@ -84,8 +84,6 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        System.out.println(board);
-        System.out.println(getKingPosition(TeamColor.BLACK));
         ChessPiece piece = board.getPiece(startPosition);
         Collection<ChessMove> moves;
         if (piece == null) {
@@ -104,7 +102,14 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
+        if (validMoves.contains(move)) {
+            ChessPiece piece = board.getPiece(move.getStartPosition());
+            board.addPiece(move.getStartPosition(), null);
+            board.addPiece(move.getEndPosition(), piece);
+        } else {
+            throw new InvalidMoveException("Invalid Move");
+        }
     }
 
     /**
@@ -120,8 +125,6 @@ public class ChessGame {
         for (ChessMove move : moves) {
             endPositions.add(move.getEndPosition());
         }
-        System.out.println(kingPosition);
-        System.out.println(endPositions);
         return endPositions.contains(kingPosition);
     }
 
