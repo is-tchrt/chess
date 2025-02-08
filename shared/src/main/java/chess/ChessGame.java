@@ -153,6 +153,8 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         Collection<ChessMove> teamValidMoves = getTeamValidMoves(teamColor);
+        System.out.println(teamValidMoves);
+        System.out.println(isInCheck(teamColor));
         return isInCheck(teamColor) && teamValidMoves.isEmpty();
     }
 
@@ -212,7 +214,10 @@ public class ChessGame {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition position = new ChessPosition(row, col);
-                moves.addAll(validMoves(position));
+                ChessPiece piece = board.getPiece(position);
+                if (piece != null && piece.getTeamColor() == teamColor) {
+                    moves.addAll(validMoves(position));
+                }
             }
         }
         return moves;
