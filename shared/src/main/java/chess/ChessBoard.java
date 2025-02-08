@@ -15,14 +15,15 @@ public class ChessBoard {
 
     public ChessBoard() {
         board = new ChessPiece[8][8];
-        resetBoard();
     }
 
     public ChessBoard(ChessBoard toCopy) {
         board = new ChessPiece[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                board[i][j] = new ChessPiece(toCopy.board[i][j]);
+                if (toCopy.board[i][j] != null) {
+                    board[i][j] = new ChessPiece(toCopy.board[i][j]);
+                }
             }
         }
     }
