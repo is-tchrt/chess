@@ -60,8 +60,18 @@ public class ChessGame {
      * Enum identifying the 2 possible teams in a chess game
      */
     public enum TeamColor {
-        WHITE(1, 2, 7, 1),
-        BLACK(8, 7, 2, -1);
+        WHITE(1, 2, 7, 1) {
+            @Override
+            public TeamColor getOpposite() {
+                return BLACK;
+            }
+        },
+        BLACK(8, 7, 2, -1) {
+            @Override
+            public TeamColor getOpposite() {
+                return WHITE;
+            }
+        };
 
         public final int firstRow;
         public final int secondRow;
@@ -74,6 +84,8 @@ public class ChessGame {
             this.secondToLastRow = secondToLastRow;
             this.pawnStep = pawnStep;
         }
+
+        public abstract TeamColor getOpposite();
     }
 
     /**
@@ -107,6 +119,7 @@ public class ChessGame {
             ChessPiece piece = board.getPiece(move.getStartPosition());
             board.addPiece(move.getStartPosition(), null);
             board.addPiece(move.getEndPosition(), piece);
+            teamTurn = teamTurn.getOpposite();
         } else {
             throw new InvalidMoveException("Invalid Move");
         }
