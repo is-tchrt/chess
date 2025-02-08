@@ -153,8 +153,6 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         Collection<ChessMove> teamValidMoves = getTeamValidMoves(teamColor);
-        System.out.println(teamValidMoves);
-        System.out.println(isInCheck(teamColor));
         return isInCheck(teamColor) && teamValidMoves.isEmpty();
     }
 
@@ -166,7 +164,8 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> teamValidMoves = getTeamValidMoves(teamColor);
+        return !isInCheck(teamColor) && teamValidMoves.isEmpty();
     }
 
     /**
