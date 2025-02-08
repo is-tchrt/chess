@@ -137,7 +137,7 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         ChessPosition kingPosition = getKingPosition(teamColor);
-        Collection<ChessMove> moves = getEnemyMoves(teamColor);
+        Collection<ChessMove> moves = getTeamMoves(teamColor.getOpposite());
         Collection<ChessPosition> endPositions = new ArrayList<>();
         for (ChessMove move : moves) {
             endPositions.add(move.getEndPosition());
@@ -192,13 +192,13 @@ public class ChessGame {
         return tempGame.isInCheck(piece.getTeamColor());
     }
 
-    private Collection<ChessMove> getEnemyMoves(TeamColor teamColor) {
+    private Collection<ChessMove> getTeamMoves(TeamColor teamColor) {
         Collection<ChessMove> moves = new ArrayList<>();
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition position = new ChessPosition(row, col);
                 ChessPiece piece = board.getPiece(position);
-                if (piece != null && piece.getTeamColor() != teamColor) {
+                if (piece != null && piece.getTeamColor() == teamColor) {
                     moves.addAll(piece.pieceMoves(board, position));
                 }
             }
