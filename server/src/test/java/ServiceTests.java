@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import requestResult.RegisterRequest;
 import requestResult.RegisterResult;
 import service.Service;
+import service.UserService;
 
 public class ServiceTests {
     @Test
@@ -34,7 +35,7 @@ public class ServiceTests {
         GameDao games = new MemoryGameDao();
         AuthDao tokens = new MemoryAuthDao();
 
-        Service service = new Service(users, games, tokens);
+        UserService service = new UserService(users, games, tokens);
         RegisterRequest request = new RegisterRequest("isaac", "password", "email");
 
         RegisterResult result = service.register(request);
