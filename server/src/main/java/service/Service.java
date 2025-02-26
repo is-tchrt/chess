@@ -17,6 +17,8 @@ public class Service {
     }
 
     public void clear() {
-        throw new RuntimeException();
+        users.clearUsers();
+        games.clearGames();
+        tokens.clearAuthTokens();
     }
 }
