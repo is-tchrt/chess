@@ -3,7 +3,8 @@ package service;
 import dataaccess.AuthDao;
 import dataaccess.GameDao;
 import dataaccess.UserDao;
-import org.eclipse.jetty.server.Authentication;
+import requestResult.RegisterRequest;
+import requestResult.RegisterResult;
 
 public class Service {
     private UserDao users;
@@ -20,5 +21,9 @@ public class Service {
         users.clearUsers();
         games.clearGames();
         tokens.clearAuthTokens();
+    }
+
+    public RegisterResult register(RegisterRequest request) {
+        throw new RuntimeException("Not Implemented");
     }
 }
