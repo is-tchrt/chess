@@ -3,6 +3,7 @@ package service;
 import dataaccess.AuthDao;
 import dataaccess.GameDao;
 import dataaccess.UserDao;
+import model.AuthData;
 import requestResult.RegisterRequest;
 import requestResult.RegisterResult;
 
@@ -21,5 +22,9 @@ public class Service {
         users.clearUsers();
         games.clearGames();
         tokens.clearAuthTokens();
+    }
+
+    protected boolean isValidAuthToken(AuthData authData) {
+        return tokens.getAuthData(authData.authToken()).username().equals(authData.username());
     }
 }
