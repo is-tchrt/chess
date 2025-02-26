@@ -4,6 +4,8 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.Test;
+import requestResult.RegisterRequest;
+import requestResult.RegisterResult;
 import service.Service;
 
 public class ServiceTests {
@@ -24,5 +26,21 @@ public class ServiceTests {
         assert(users.listUsers().isEmpty());
         assert(games.listGames().isEmpty());
         assert(tokens.listAuthTokens().isEmpty());
+    }
+
+    @Test
+    void register() throws DataAccessException {
+        UserDao users = new MemoryUserDao();
+        GameDao games = new MemoryGameDao();
+        AuthDao tokens = new MemoryAuthDao();
+
+        Service service = new Service(users, games, tokens);
+        RegisterRequest request = new RegisterRequest("isaac", "password", "email");
+
+        RegisterResult result = service.register(request);
+
+        assert !users.listUsers().isEmpty();
+        assert !tokens.listAuthTokens().isEmpty();
+        assert result.userName().equals("isaac");
     }
 }
