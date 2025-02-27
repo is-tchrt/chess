@@ -8,4 +8,5 @@ public interface UserDao {
     public void clearUsers();
     public void addUser(UserData user);
     public Collection<UserData> listUsers();
+    public UserData getUser(String username);
 }

@@ -23,4 +23,9 @@ public class MemoryUserDao implements UserDao {
     public Collection<UserData> listUsers() {
         return users.values();
     }
+
+    @Override
+    public UserData getUser(String username) {
+        return users.get(username);
+    }
 }
