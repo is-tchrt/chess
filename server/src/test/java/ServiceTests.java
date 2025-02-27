@@ -92,4 +92,16 @@ public class ServiceTests {
         assert result.username().equals("isaac");
         assert !result.authToken().isBlank();
     }
+
+    @Test
+    void login_401() throws DataAccessException {
+        RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
+        LoginRequest loginRequest = new LoginRequest("isaac", "password1");
+
+        service.register(registerRequest);
+        LoginResult result = service.login(loginRequest);
+
+        assert result.username() == null;
+        assert result.message().equals("Error: unauthorized");
+    }
 }
