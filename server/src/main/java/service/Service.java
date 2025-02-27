@@ -24,12 +24,12 @@ public class Service {
         tokens.clearAuthTokens();
     }
 
-    protected boolean isValidAuthToken(AuthData authData) {
-        AuthData result = tokens.getAuthData(authData.authToken());
+    protected boolean isValidAuthToken(String authToken) {
+        AuthData result = tokens.getAuthData(authToken);
         if (result == null) {
             return false;
         } else {
-            return result.username().equals(authData.username());
+            return true;
         }
     }
 

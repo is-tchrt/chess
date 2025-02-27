@@ -5,10 +5,7 @@ import dataaccess.GameDao;
 import dataaccess.UserDao;
 import model.AuthData;
 import model.UserData;
-import requestResult.LoginRequest;
-import requestResult.LoginResult;
-import requestResult.RegisterRequest;
-import requestResult.RegisterResult;
+import requestResult.*;
 
 public class UserService extends Service {
     public UserService(UserDao users, GameDao games, AuthDao tokens) {
@@ -39,6 +36,7 @@ public class UserService extends Service {
         if (users.getUserByNameAndPassword(request.username(), request.password()) != null) {
             try {
                 String authToken = generateAuthToken();
+                tokens.addAuthToken(new AuthData(authToken, request.username()));
                 result = new LoginResult(request.username(), authToken, null);
             } catch (Exception e) {
                 result = new LoginResult(null, null, "Error: ".concat(e.getMessage()));
@@ -47,6 +45,23 @@ public class UserService extends Service {
             result = new LoginResult(null, null, "Error: unauthorized");
         }
         return result;
+    }
+
+    public BlankResult logout(LogoutRequest request) {
+        BlankResult result;
+        if (isValidAuthToken(request.authToken())) {
+            try {
+                AuthData authData = tokens.getAuthData(request.authToken());
+                tokens.removeAuthData(authData.authToken());
+                users.removeUser(authData.username());
+                result = new BlankResult(null);
+            } catch (Exception e) {
+                result = new BlankResult("Error: ". concat(e.getMessage()));
+            }
+        } else {
+            result = new BlankResult("Error: unauthorized");
+        }
+        return new BlankResult(null);
     }
 
     private boolean isValidRequest(RegisterRequest request) {
