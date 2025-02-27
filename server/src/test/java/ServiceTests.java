@@ -67,4 +67,16 @@ public class ServiceTests {
 
         assert result.message().equals("Error: bad request");
     }
+
+    @Test
+    void register_403() throws DataAccessException {
+        RegisterRequest requestOne = new RegisterRequest("isaac", "password", "email");
+        RegisterRequest requestTwo = new RegisterRequest("isaac", "password", "email");
+
+        service.register(requestOne);
+        RegisterResult result = service.register(requestTwo);
+
+        assert result.message().equals("Error: already taken");
+        assert users.listUsers().size() == 1;
+    }
 }
