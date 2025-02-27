@@ -115,4 +115,16 @@ public class ServiceTests {
         assert users.getUser(registerResult.username()) == null;
         assert tokens.getAuthData(registerResult.authToken()) == null;
     }
+
+    @Test
+    void logout_401() throws DataAccessException {
+        RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
+
+        RegisterResult registerResult = service.register(registerRequest);
+
+        LogoutRequest logoutRequest = new LogoutRequest("invalid authToken");
+        BlankResult result = service.logout(logoutRequest);
+
+        assert result.message().equals("Error: unauthorized");
+    }
 }

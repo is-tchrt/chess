@@ -49,6 +49,7 @@ public class UserService extends Service {
 
     public BlankResult logout(LogoutRequest request) {
         BlankResult result;
+        System.out.println(request.authToken());
         if (isValidAuthToken(request.authToken())) {
             try {
                 AuthData authData = tokens.getAuthData(request.authToken());
@@ -61,7 +62,7 @@ public class UserService extends Service {
         } else {
             result = new BlankResult("Error: unauthorized");
         }
-        return new BlankResult(null);
+        return result;
     }
 
     private boolean isValidRequest(RegisterRequest request) {
