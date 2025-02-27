@@ -14,9 +14,19 @@ public class UserService extends Service {
     }
 
     public RegisterResult register(RegisterRequest request) {
-        users.addUser(new UserData(request.username(), request.password(), request.email()));
-        AuthData authToken = new AuthData(generateAuthToken(), request.username());
-        tokens.addAuthToken(authToken);
-        return new RegisterResult(authToken.username(), authToken.authToken(), null);
+        RegisterResult result;
+        if (!isValidRequest(request)) {
+            result = new RegisterResult(null, null, "Error: bad request");
+        } else {
+            users.addUser(new UserData(request.username(), request.password(), request.email()));
+            AuthData authToken = new AuthData(generateAuthToken(), request.username());
+            tokens.addAuthToken(authToken);
+            result = new RegisterResult(authToken.username(), authToken.authToken(), null);
+        }
+        return result;
+    }
+
+    protected boolean isValidRequest(RegisterRequest request) {
+        return !request.username().isBlank() && !request.password().isBlank() && !request.email().isBlank();
     }
 }
