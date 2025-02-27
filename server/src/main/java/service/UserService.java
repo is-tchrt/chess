@@ -5,6 +5,8 @@ import dataaccess.GameDao;
 import dataaccess.UserDao;
 import model.AuthData;
 import model.UserData;
+import requestResult.LoginRequest;
+import requestResult.LoginResult;
 import requestResult.RegisterRequest;
 import requestResult.RegisterResult;
 
@@ -30,6 +32,11 @@ public class UserService extends Service {
             }
         }
         return result;
+    }
+
+    public LoginResult login(LoginRequest request) {
+        String authToken = generateAuthToken();
+        return new LoginResult(request.username(), authToken, null);
     }
 
     private boolean isValidRequest(RegisterRequest request) {
