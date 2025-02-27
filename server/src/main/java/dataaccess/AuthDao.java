@@ -9,4 +9,5 @@ public interface AuthDao {
     public void addAuthToken(AuthData authData);
     public Collection<AuthData> listAuthTokens();
     public AuthData getAuthData(String authToken);
+    public void removeAuthData(String authToken);
 }
