@@ -37,8 +37,12 @@ public class UserService extends Service {
     public LoginResult login(LoginRequest request) {
         LoginResult result;
         if (users.getUserByNameAndPassword(request.username(), request.password()) != null) {
-            String authToken = generateAuthToken();
-            result = new LoginResult(request.username(), authToken, null);
+            try {
+                String authToken = generateAuthToken();
+                result = new LoginResult(request.username(), authToken, null);
+            } catch (Exception e) {
+                result = new LoginResult(null, null, "Error: ".concat(e.getMessage()));
+            }
         } else {
             result = new LoginResult(null, null, "Error: unauthorized");
         }
