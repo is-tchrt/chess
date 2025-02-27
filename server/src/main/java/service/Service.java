@@ -4,8 +4,6 @@ import dataaccess.AuthDao;
 import dataaccess.GameDao;
 import dataaccess.UserDao;
 import model.AuthData;
-import requestResult.RegisterRequest;
-import requestResult.RegisterResult;
 
 import java.util.UUID;
 
@@ -27,7 +25,12 @@ public class Service {
     }
 
     protected boolean isValidAuthToken(AuthData authData) {
-        return tokens.getAuthData(authData.authToken()).username().equals(authData.username());
+        AuthData result = tokens.getAuthData(authData.authToken());
+        if (result == null) {
+            return false;
+        } else {
+            return result.username().equals(authData.username());
+        }
     }
 
     protected String generateAuthToken() {
