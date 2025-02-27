@@ -17,6 +17,8 @@ public class UserService extends Service {
         RegisterResult result;
         if (!isValidRequest(request)) {
             result = new RegisterResult(null, null, "Error: bad request");
+        } else if (!isUniqueUsername(request.username())) {
+            result = new RegisterResult(null, null, "Error: already taken");
         } else {
             users.addUser(new UserData(request.username(), request.password(), request.email()));
             AuthData authToken = new AuthData(generateAuthToken(), request.username());
@@ -26,7 +28,11 @@ public class UserService extends Service {
         return result;
     }
 
-    protected boolean isValidRequest(RegisterRequest request) {
+    private boolean isValidRequest(RegisterRequest request) {
         return !request.username().isBlank() && !request.password().isBlank() && !request.email().isBlank();
+    }
+
+    private boolean isUniqueUsername(String userName) {
+        return users.getUser(userName) == null;
     }
 }
