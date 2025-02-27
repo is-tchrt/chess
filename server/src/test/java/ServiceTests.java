@@ -6,10 +6,7 @@ import model.UserData;
 import org.eclipse.jetty.util.log.Log;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import requestResult.LoginRequest;
-import requestResult.LoginResult;
-import requestResult.RegisterRequest;
-import requestResult.RegisterResult;
+import requestResult.*;
 import service.Service;
 import service.UserService;
 
@@ -103,5 +100,21 @@ public class ServiceTests {
 
         assert result.username() == null;
         assert result.message().equals("Error: unauthorized");
+    }
+
+    @Test
+    void logout_200() throws DataAccessException {
+        RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
+        LoginRequest loginRequest = new LoginRequest("isaac", "password");
+
+        service.register(registerRequest);
+        LoginResult loginResult = service.login(loginRequest);
+
+        LogoutRequest logoutRequest = new LogoutRequest(loginResult.authToken());
+        BlankResult result = service.logout(logoutRequest);
+
+        assert result.message() == null;
+        assert users.getUser(loginResult.username()) == null;
+        assert tokens.getAuthData(loginResult.authToken()) == null;
     }
 }
