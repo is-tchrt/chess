@@ -3,14 +3,15 @@ import dataaccess.*;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import org.eclipse.jetty.util.log.Log;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import requestResult.LoginRequest;
+import requestResult.LoginResult;
 import requestResult.RegisterRequest;
 import requestResult.RegisterResult;
 import service.Service;
 import service.UserService;
-
-import java.beans.beancontext.BeanContextChild;
 
 public class ServiceTests {
     UserDao users = new MemoryUserDao();
@@ -44,7 +45,7 @@ public class ServiceTests {
     }
 
     @Test
-    void register_success() throws DataAccessException {
+    void register_200() throws DataAccessException {
 //        UserDao users = new MemoryUserDao();
 //        GameDao games = new MemoryGameDao();
 //        AuthDao tokens = new MemoryAuthDao();
@@ -56,7 +57,7 @@ public class ServiceTests {
 
         assert !users.listUsers().isEmpty();
         assert !tokens.listAuthTokens().isEmpty();
-        assert result.userName().equals("isaac");
+        assert result.username().equals("isaac");
     }
 
     @Test
@@ -78,5 +79,17 @@ public class ServiceTests {
 
         assert result.message().equals("Error: already taken");
         assert users.listUsers().size() == 1;
+    }
+
+    @Test
+    void login_200() throws DataAccessException {
+        RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
+        LoginRequest loginRequest = new LoginRequest("isaac", "password");
+
+        service.register(registerRequest);
+        LoginResult result = service.login(loginRequest);
+
+        assert result.username().equals("isaac");
+        assert !result.authToken().isBlank();
     }
 }
