@@ -20,10 +20,14 @@ public class UserService extends Service {
         } else if (!isUniqueUsername(request.username())) {
             result = new RegisterResult(null, null, "Error: already taken");
         } else {
-            users.addUser(new UserData(request.username(), request.password(), request.email()));
-            AuthData authToken = new AuthData(generateAuthToken(), request.username());
-            tokens.addAuthToken(authToken);
-            result = new RegisterResult(authToken.username(), authToken.authToken(), null);
+            try {
+                users.addUser(new UserData(request.username(), request.password(), request.email()));
+                AuthData authToken = new AuthData(generateAuthToken(), request.username());
+                tokens.addAuthToken(authToken);
+                result = new RegisterResult(authToken.username(), authToken.authToken(), null);
+            } catch (Exception e) {
+                result = new RegisterResult(null, null, "Error: ".concat(e.getMessage()));
+            }
         }
         return result;
     }
