@@ -7,6 +7,8 @@ import dataaccess.UserDao;
 import model.GameData;
 import requestResult.CreateGameRequest;
 import requestResult.CreateGameResult;
+import requestResult.ListGamesRequest;
+import requestResult.ListGamesResult;
 
 public class GameService extends Service {
     private int nextGameID = 0;
@@ -29,6 +31,16 @@ public class GameService extends Service {
             }
         } else {
             result = new CreateGameResult(null, "Error: unauthorized");
+        }
+        return result;
+    }
+
+    public ListGamesResult listGame(ListGamesRequest request) {
+        ListGamesResult result;
+        if (isValidAuthToken(request.authToken())) {
+            throw new RuntimeException("Not implemented");
+        } else {
+            result = new ListGamesResult(null, "Error: unauthorized");
         }
         return result;
     }

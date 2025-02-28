@@ -187,7 +187,7 @@ public class ServiceTests {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
         RegisterResult registerResult = userService.register(registerRequest);
 
-        ListGamesRequest listGamesRequest = new ListGamesRequest(registerResult.authToken());
+        ListGamesRequest listGamesRequest = new ListGamesRequest("invalid authToken");
         ListGamesResult result = gameService.listGame(listGamesRequest);
 
         assert result.message().equals("Error: unauthorized");
