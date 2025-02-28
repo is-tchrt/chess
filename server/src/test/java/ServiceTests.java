@@ -170,7 +170,6 @@ public class ServiceTests {
     @Test
     void listGames_200() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
-
         RegisterResult registerResult = userService.register(registerRequest);
 
         CreateGameRequest createGameRequest = new CreateGameRequest("new game");
@@ -181,5 +180,16 @@ public class ServiceTests {
 
         assert result.message() == null;
         assert result.games().size() == 1;
+    }
+
+    @Test
+    void listGames_401() throws DataAccessException {
+        RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
+        RegisterResult registerResult = userService.register(registerRequest);
+
+        ListGamesRequest listGamesRequest = new ListGamesRequest(registerResult.authToken());
+        ListGamesResult result = gameService.listGame(listGamesRequest);
+
+        assert result.message().equals("Error: unauthorized");
     }
 }
