@@ -194,6 +194,21 @@ public class ServiceTests {
     }
 
     @Test
+    void joinGame_200() throws DataAccessException {
+        RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
+        RegisterResult registerResult = userService.register(registerRequest);
+
+        CreateGameRequest createGameRequest = new CreateGameRequest("new game");
+        CreateGameResult createGameResult = gameService.createGame(createGameRequest, registerResult.authToken());
+
+        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE", createGameResult.gameID());
+        BlankResult result = gameService.joinGame(joinGameRequest, registerResult.authToken());
+
+        assert result.message() == null;
+        assert games.getGame(createGameResult.gameID()).whiteUsername().equals("isaac");
+    }
+
+    @Test
     void joinGame_400_fake_game() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
         RegisterResult registerResult = userService.register(registerRequest);
