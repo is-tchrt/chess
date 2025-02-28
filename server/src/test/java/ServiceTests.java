@@ -192,4 +192,14 @@ public class ServiceTests {
 
         assert result.message().equals("Error: unauthorized");
     }
-}
+
+    @Test
+    void joinGame_401() throws DataAccessException {
+        RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
+        RegisterResult registerResult = userService.register(registerRequest);
+
+        JoinGameRequest joinGameRequest = new JoinGameRequest("BLACK", 10);
+        BlankResult result = gameService.joinGame(joinGameRequest, "invalid authToken");
+
+        assert result.message().equals("Error: unauthorized");
+    }}
