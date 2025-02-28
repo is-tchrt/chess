@@ -144,6 +144,18 @@ public class ServiceTests {
     }
 
     @Test
+    void createGame_400() throws DataAccessException {
+        RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
+
+        RegisterResult registerResult = userService.register(registerRequest);
+
+        CreateGameRequest createGameRequest = new CreateGameRequest("");
+        CreateGameResult result = gameService.createGame(createGameRequest, registerResult.authToken());
+
+        assert result.message().equals("Error: bad request");
+    }
+
+    @Test
     void createGame_401() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
 
