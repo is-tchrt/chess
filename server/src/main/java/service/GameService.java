@@ -56,8 +56,8 @@ public class GameService extends Service {
             result = new BlankResult("Error: unauthorized");
         } else if (!isValidPlayerColor(request.playerColor()) || !isValidGameID(request.gameID())) {
             result = new BlankResult("Error: bad request");
-        } else if (isValidAuthToken(authToken)) {
-            throw new RuntimeException();
+        } else if (!isAvailablePlayerColor(request)) {
+            result = new BlankResult("Error: already taken");
         } else {
             try {
 //                games.addGame(new GameData(nextGameID, "", "", request.gameName(), new ChessGame()));
@@ -90,5 +90,14 @@ public class GameService extends Service {
 
     private boolean isValidGameID(int gameID) {
         return games.getGame(gameID) != null;
+    }
+
+    private boolean isAvailablePlayerColor(JoinGameRequest request) {
+        GameData gameData = games.getGame(request.gameID());
+        if (request.playerColor().equals("WHITE")) {
+            return gameData.whiteUsername().isBlank();
+        } else {
+            return gameData.blackUsername().isBlank();
+        }
     }
 }
