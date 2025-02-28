@@ -52,11 +52,13 @@ public class GameService extends Service {
 
     public BlankResult joinGame(JoinGameRequest request, String authToken) {
         BlankResult result;
-//        if (request.gameName().isBlank()) {
-////            result = new CreateGameResult(null, "Error: bad request");
-//            throw new RuntimeException("Not implemented");
-//        } else
-            if (isValidAuthToken(authToken)) {
+        if (!isValidAuthToken(authToken)) {
+            result = new BlankResult("Error: unauthorized");
+        } else if (!isValidPlayerColor(request.playerColor()) || !isValidGameID(request.gameID())) {
+            result = new BlankResult("Error: bad request");
+        } else if (isValidAuthToken(authToken)) {
+            throw new RuntimeException();
+        } else {
             try {
 //                games.addGame(new GameData(nextGameID, "", "", request.gameName(), new ChessGame()));
 //                result = new CreateGameResult(nextGameID, null);
@@ -66,8 +68,6 @@ public class GameService extends Service {
 //                result = new CreateGameResult(null, "Error: ".concat(e.getMessage()));
                 throw new RuntimeException("Not implemented");
             }
-        } else {
-            result = new BlankResult("Error: unauthorized");
         }
         return result;
     }
@@ -82,5 +82,13 @@ public class GameService extends Service {
             newGameList.add(new GameData(game.GameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), null));
         }
         return newGameList;
+    }
+
+    private boolean isValidPlayerColor(String playerColor) {
+        return playerColor.equals("WHITE") || playerColor.equals("BLACK");
+    }
+
+    private boolean isValidGameID(int gameID) {
+        return games.getGame(gameID) != null;
     }
 }
