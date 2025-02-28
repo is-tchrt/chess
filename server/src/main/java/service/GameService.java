@@ -5,10 +5,7 @@ import dataaccess.AuthDao;
 import dataaccess.GameDao;
 import dataaccess.UserDao;
 import model.GameData;
-import requestResult.CreateGameRequest;
-import requestResult.CreateGameResult;
-import requestResult.ListGamesRequest;
-import requestResult.ListGamesResult;
+import requestResult.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,6 +46,28 @@ public class GameService extends Service {
             }
         } else {
             result = new ListGamesResult(null, "Error: unauthorized");
+        }
+        return result;
+    }
+
+    public BlankResult joinGame(JoinGameRequest request, String authToken) {
+        BlankResult result;
+//        if (request.gameName().isBlank()) {
+////            result = new CreateGameResult(null, "Error: bad request");
+//            throw new RuntimeException("Not implemented");
+//        } else
+            if (isValidAuthToken(authToken)) {
+            try {
+//                games.addGame(new GameData(nextGameID, "", "", request.gameName(), new ChessGame()));
+//                result = new CreateGameResult(nextGameID, null);
+//                nextGameID++;
+                throw new RuntimeException("Not implemented");
+            } catch (Exception e) {
+//                result = new CreateGameResult(null, "Error: ".concat(e.getMessage()));
+                throw new RuntimeException("Not implemented");
+            }
+        } else {
+            result = new BlankResult("Error: unauthorized");
         }
         return result;
     }
