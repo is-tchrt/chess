@@ -227,4 +227,18 @@ public class ServiceTests {
         BlankResult result = gameService.joinGame(joinGameRequest, "invalid authToken");
 
         assert result.message().equals("Error: unauthorized");
-    }}
+    }
+
+    @Test
+    void joinGame_403() throws DataAccessException {
+        RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
+        RegisterResult registerResult = userService.register(registerRequest);
+
+        games.addGame(new GameData(0, "jacob", "henry", "new game", new ChessGame()));
+
+        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE", 0);
+        BlankResult result = gameService.joinGame(joinGameRequest, registerResult.authToken());
+
+        assert result.message().equals("Error: already taken");
+    }
+}
