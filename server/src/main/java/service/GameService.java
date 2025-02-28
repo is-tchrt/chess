@@ -59,15 +59,7 @@ public class GameService extends Service {
         } else if (!isAvailablePlayerColor(request)) {
             result = new BlankResult("Error: already taken");
         } else {
-            try {
-//                games.addGame(new GameData(nextGameID, "", "", request.gameName(), new ChessGame()));
-//                result = new CreateGameResult(nextGameID, null);
-//                nextGameID++;
-                throw new RuntimeException("Not implemented");
-            } catch (Exception e) {
-//                result = new CreateGameResult(null, "Error: ".concat(e.getMessage()));
-                throw new RuntimeException("Not implemented");
-            }
+            result = joinGameWithValidRequest(request, authToken);
         }
         return result;
     }
@@ -99,5 +91,25 @@ public class GameService extends Service {
         } else {
             return gameData.blackUsername().isBlank();
         }
+    }
+
+    private BlankResult joinGameWithValidRequest(JoinGameRequest request, String authToken) {
+        BlankResult result;
+        try {
+            GameData gameData = games.getGame(request.gameID());
+            String userName = tokens.getAuthData(authToken).username();
+            if (request.playerColor().equals("WHITE")) {
+                games.addGame(new GameData(gameData.GameID(), userName, gameData.blackUsername(),
+                        gameData.gameName(), gameData.game()));
+            } else {
+                games.addGame(new GameData(gameData.GameID(), gameData.whiteUsername(), userName,
+                        gameData.gameName(), gameData.game()));
+            }
+            result = new BlankResult(null);
+        } catch (Exception e) {
+//                result = new CreateGameResult(null, "Error: ".concat(e.getMessage()));
+            result = new BlankResult("Error: ".concat(e.getMessage()));
+        }
+        return result;
     }
 }
