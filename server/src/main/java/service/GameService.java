@@ -12,6 +12,12 @@ public class GameService extends Service {
     }
 
     public CreateGameResult createGame(CreateGameRequest request, String authToken) {
-        throw new RuntimeException("Not implemented");
+        CreateGameResult result;
+        if (isValidAuthToken(authToken)) {
+            throw new RuntimeException("Not implemented");
+        } else {
+            result = new CreateGameResult(null, "Error: unauthorized");
+        }
+        return result;
     }
 }

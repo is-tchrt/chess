@@ -143,6 +143,7 @@ public class ServiceTests {
         assert games.listGames().size() == 1;
     }
 
+    @Test
     void createGame_401() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
 
