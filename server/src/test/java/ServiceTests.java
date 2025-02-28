@@ -3,10 +3,10 @@ import dataaccess.*;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-import org.eclipse.jetty.util.log.Log;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import requestResult.*;
+import service.GameService;
 import service.Service;
 import service.UserService;
 
@@ -15,11 +15,12 @@ public class ServiceTests {
     GameDao games = new MemoryGameDao();
     AuthDao tokens = new MemoryAuthDao();
 
-    UserService service = new UserService(users, games, tokens);
+    UserService userService = new UserService(users, games, tokens);
+    GameService gameService = new GameService(users, games, tokens);
 
     @BeforeEach
     void reset() {
-        service.clear();
+        userService.clear();
     }
 
     @Test
@@ -47,10 +48,10 @@ public class ServiceTests {
 //        GameDao games = new MemoryGameDao();
 //        AuthDao tokens = new MemoryAuthDao();
 //
-//        UserService service = new UserService(users, games, tokens);
+//        UserService userService = new UserService(users, games, tokens);
         RegisterRequest request = new RegisterRequest("isaac", "password", "email");
 
-        RegisterResult result = service.register(request);
+        RegisterResult result = userService.register(request);
 
         assert !users.listUsers().isEmpty();
         assert !tokens.listAuthTokens().isEmpty();
@@ -61,7 +62,7 @@ public class ServiceTests {
     void register_400() throws DataAccessException {
         RegisterRequest request = new RegisterRequest("", "password", "email");
 
-        RegisterResult result = service.register(request);
+        RegisterResult result = userService.register(request);
 
         assert result.message().equals("Error: bad request");
     }
@@ -71,8 +72,8 @@ public class ServiceTests {
         RegisterRequest requestOne = new RegisterRequest("isaac", "password", "email");
         RegisterRequest requestTwo = new RegisterRequest("isaac", "password", "email");
 
-        service.register(requestOne);
-        RegisterResult result = service.register(requestTwo);
+        userService.register(requestOne);
+        RegisterResult result = userService.register(requestTwo);
 
         assert result.message().equals("Error: already taken");
         assert users.listUsers().size() == 1;
@@ -83,8 +84,8 @@ public class ServiceTests {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
         LoginRequest loginRequest = new LoginRequest("isaac", "password");
 
-        service.register(registerRequest);
-        LoginResult result = service.login(loginRequest);
+        userService.register(registerRequest);
+        LoginResult result = userService.login(loginRequest);
 
         assert result.username().equals("isaac");
         assert !result.authToken().isBlank();
@@ -95,8 +96,8 @@ public class ServiceTests {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
         LoginRequest loginRequest = new LoginRequest("isaac", "password1");
 
-        service.register(registerRequest);
-        LoginResult result = service.login(loginRequest);
+        userService.register(registerRequest);
+        LoginResult result = userService.login(loginRequest);
 
         assert result.username() == null;
         assert result.message().equals("Error: unauthorized");
@@ -106,10 +107,10 @@ public class ServiceTests {
     void logout_200() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
 
-        RegisterResult registerResult = service.register(registerRequest);
+        RegisterResult registerResult = userService.register(registerRequest);
 
         LogoutRequest logoutRequest = new LogoutRequest(registerResult.authToken());
-        BlankResult result = service.logout(logoutRequest);
+        BlankResult result = userService.logout(logoutRequest);
 
         assert result.message() == null;
         assert users.getUser(registerResult.username()) == null;
@@ -120,10 +121,35 @@ public class ServiceTests {
     void logout_401() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
 
-        RegisterResult registerResult = service.register(registerRequest);
+        RegisterResult registerResult = userService.register(registerRequest);
 
         LogoutRequest logoutRequest = new LogoutRequest("invalid authToken");
-        BlankResult result = service.logout(logoutRequest);
+        BlankResult result = userService.logout(logoutRequest);
+
+        assert result.message().equals("Error: unauthorized");
+    }
+
+    @Test
+    void createGame_200() throws DataAccessException {
+        RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
+
+        RegisterResult registerResult = userService.register(registerRequest);
+
+        CreateGameRequest createGameRequest = new CreateGameRequest("new game");
+        CreateGameResult result = gameService.createGame(createGameRequest, registerResult.authToken());
+
+        assert result.message() == null;
+        assert result.gameID() != null;
+        assert games.listGames().size() == 1;
+    }
+
+    void createGame_401() throws DataAccessException {
+        RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
+
+        RegisterResult registerResult = userService.register(registerRequest);
+
+        CreateGameRequest createGameRequest = new CreateGameRequest("new game");
+        CreateGameResult result = gameService.createGame(createGameRequest, "invalid authToken");
 
         assert result.message().equals("Error: unauthorized");
     }
