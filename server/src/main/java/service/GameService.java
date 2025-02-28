@@ -77,7 +77,7 @@ public class GameService extends Service {
     }
 
     private boolean isValidPlayerColor(String playerColor) {
-        return playerColor.equals("WHITE") || playerColor.equals("BLACK");
+        return (playerColor != null) && (playerColor.equals("WHITE") || playerColor.equals("BLACK"));
     }
 
     private boolean isValidGameID(int gameID) {
