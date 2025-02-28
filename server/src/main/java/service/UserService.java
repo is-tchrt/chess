@@ -49,7 +49,6 @@ public class UserService extends Service {
 
     public BlankResult logout(LogoutRequest request) {
         BlankResult result;
-        System.out.println(request.authToken());
         if (isValidAuthToken(request.authToken())) {
             try {
                 AuthData authData = tokens.getAuthData(request.authToken());
