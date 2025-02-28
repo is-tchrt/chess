@@ -120,8 +120,7 @@ public class ServiceTests {
     @Test
     void logout_401() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
-
-        RegisterResult registerResult = userService.register(registerRequest);
+        userService.register(registerRequest);
 
         LogoutRequest logoutRequest = new LogoutRequest("invalid authToken");
         BlankResult result = userService.logout(logoutRequest);
@@ -158,8 +157,7 @@ public class ServiceTests {
     @Test
     void createGame_401() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
-
-        RegisterResult registerResult = userService.register(registerRequest);
+        userService.register(registerRequest);
 
         CreateGameRequest createGameRequest = new CreateGameRequest("new game");
         CreateGameResult result = gameService.createGame(createGameRequest, "invalid authToken");
@@ -173,7 +171,7 @@ public class ServiceTests {
         RegisterResult registerResult = userService.register(registerRequest);
 
         CreateGameRequest createGameRequest = new CreateGameRequest("new game");
-        CreateGameResult createGameResult = gameService.createGame(createGameRequest, registerResult.authToken());
+        gameService.createGame(createGameRequest, registerResult.authToken());
 
         ListGamesRequest listGamesRequest = new ListGamesRequest(registerResult.authToken());
         ListGamesResult result = gameService.listGame(listGamesRequest);
@@ -185,7 +183,7 @@ public class ServiceTests {
     @Test
     void listGames_401() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
-        RegisterResult registerResult = userService.register(registerRequest);
+        userService.register(registerRequest);
 
         ListGamesRequest listGamesRequest = new ListGamesRequest("invalid authToken");
         ListGamesResult result = gameService.listGame(listGamesRequest);
@@ -236,7 +234,7 @@ public class ServiceTests {
     @Test
     void joinGame_401() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
-        RegisterResult registerResult = userService.register(registerRequest);
+        userService.register(registerRequest);
 
         JoinGameRequest joinGameRequest = new JoinGameRequest("BLACK", 10);
         BlankResult result = gameService.joinGame(joinGameRequest, "invalid authToken");
