@@ -2,7 +2,7 @@ package requestResult;
 
 import model.GameData;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
-public record ListGamesResult(ArrayList<GameData> games, String message) {
+public record ListGamesResult(Collection<GameData> games, String message) {
 }
