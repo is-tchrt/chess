@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class GameService extends Service {
-    private int nextGameID = 0;
+    private int nextGameID = 1;
 
     public GameService(UserDao users, GameDao games, AuthDao tokens) {
         super(users, games, tokens);
