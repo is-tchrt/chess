@@ -23,7 +23,7 @@ public class GameService extends Service {
             result = new CreateGameResult(null, "Error: bad request");
         } else if (isValidAuthToken(authToken)) {
             try {
-                games.addGame(new GameData(nextGameID, "", "", request.gameName(), new ChessGame()));
+                games.addGame(new GameData(nextGameID, null, null, request.gameName(), new ChessGame()));
                 result = new CreateGameResult(nextGameID, null);
                 nextGameID++;
             } catch (Exception e) {
@@ -87,9 +87,9 @@ public class GameService extends Service {
     private boolean isAvailablePlayerColor(JoinGameRequest request) {
         GameData gameData = games.getGame(request.gameID());
         if (request.playerColor().equals("WHITE")) {
-            return gameData.whiteUsername().isBlank();
+            return gameData.whiteUsername() == null;
         } else {
-            return gameData.blackUsername().isBlank();
+            return gameData.blackUsername() == null;
         }
     }
 
