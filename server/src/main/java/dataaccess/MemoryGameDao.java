@@ -15,7 +15,7 @@ public class MemoryGameDao implements GameDao {
 
     @Override
     public void addGame(GameData game) {
-        games.put(game.GameID(), game);
+        games.put(game.gameID(), game);
     }
 
     @Override

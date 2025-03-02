@@ -71,7 +71,7 @@ public class GameService extends Service {
     private Collection<GameData> getGameMetaData(Collection<GameData> gameList) {
         Collection<GameData> newGameList = new ArrayList<>();
         for (GameData game : gameList) {
-            newGameList.add(new GameData(game.GameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), null));
+            newGameList.add(new GameData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), null));
         }
         return newGameList;
     }
@@ -99,10 +99,10 @@ public class GameService extends Service {
             GameData gameData = games.getGame(request.gameID());
             String userName = tokens.getAuthData(authToken).username();
             if (request.playerColor().equals("WHITE")) {
-                games.addGame(new GameData(gameData.GameID(), userName, gameData.blackUsername(),
+                games.addGame(new GameData(gameData.gameID(), userName, gameData.blackUsername(),
                         gameData.gameName(), gameData.game()));
             } else {
-                games.addGame(new GameData(gameData.GameID(), gameData.whiteUsername(), userName,
+                games.addGame(new GameData(gameData.gameID(), gameData.whiteUsername(), userName,
                         gameData.gameName(), gameData.game()));
             }
             result = new BlankResult(null);
