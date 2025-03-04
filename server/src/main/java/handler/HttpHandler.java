@@ -68,7 +68,7 @@ public class HttpHandler {
     }
 
     private int getStatusCodeFromMessage(String message) {
-        int status = 0;
+        int status;
         if (message == null) {
             status = 200;
         } else if (message.equals("Error: unauthorized")) {
