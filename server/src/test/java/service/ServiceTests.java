@@ -1,14 +1,14 @@
+package service;
+
 import chess.ChessGame;
 import dataaccess.*;
+import http.request.*;
+import http.result.*;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import requestResult.*;
-import service.GameService;
-import service.Service;
-import service.UserService;
 
 public class ServiceTests {
     UserDao users = new MemoryUserDao();
@@ -43,12 +43,7 @@ public class ServiceTests {
     }
 
     @Test
-    void register_200() throws DataAccessException {
-//        UserDao users = new MemoryUserDao();
-//        GameDao games = new MemoryGameDao();
-//        AuthDao tokens = new MemoryAuthDao();
-//
-//        UserService userService = new UserService(users, games, tokens);
+    void register200() throws DataAccessException {
         RegisterRequest request = new RegisterRequest("isaac", "password", "email");
 
         RegisterResult result = userService.register(request);
@@ -59,7 +54,7 @@ public class ServiceTests {
     }
 
     @Test
-    void register_400() throws DataAccessException {
+    void register400() throws DataAccessException {
         RegisterRequest request = new RegisterRequest("", "password", "email");
 
         RegisterResult result = userService.register(request);
@@ -68,7 +63,7 @@ public class ServiceTests {
     }
 
     @Test
-    void register_403() throws DataAccessException {
+    void register403() throws DataAccessException {
         RegisterRequest requestOne = new RegisterRequest("isaac", "password", "email");
         RegisterRequest requestTwo = new RegisterRequest("isaac", "password", "email");
 
@@ -80,7 +75,7 @@ public class ServiceTests {
     }
 
     @Test
-    void login_200() throws DataAccessException {
+    void login200() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
         LoginRequest loginRequest = new LoginRequest("isaac", "password");
 
@@ -92,7 +87,7 @@ public class ServiceTests {
     }
 
     @Test
-    void login_401() throws DataAccessException {
+    void login401() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
         LoginRequest loginRequest = new LoginRequest("isaac", "password1");
 
@@ -104,7 +99,7 @@ public class ServiceTests {
     }
 
     @Test
-    void logout_200() throws DataAccessException {
+    void logout200() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
 
         RegisterResult registerResult = userService.register(registerRequest);
@@ -118,7 +113,7 @@ public class ServiceTests {
     }
 
     @Test
-    void logout_401() throws DataAccessException {
+    void logout401() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
         userService.register(registerRequest);
 
@@ -129,7 +124,7 @@ public class ServiceTests {
     }
 
     @Test
-    void createGame_200() throws DataAccessException {
+    void createGame200() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
 
         RegisterResult registerResult = userService.register(registerRequest);
@@ -143,7 +138,7 @@ public class ServiceTests {
     }
 
     @Test
-    void createGame_400() throws DataAccessException {
+    void createGame400() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
 
         RegisterResult registerResult = userService.register(registerRequest);
@@ -155,7 +150,7 @@ public class ServiceTests {
     }
 
     @Test
-    void createGame_401() throws DataAccessException {
+    void createGame401() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
         userService.register(registerRequest);
 
@@ -166,7 +161,7 @@ public class ServiceTests {
     }
 
     @Test
-    void listGames_200() throws DataAccessException {
+    void listGames200() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
         RegisterResult registerResult = userService.register(registerRequest);
 
@@ -181,7 +176,7 @@ public class ServiceTests {
     }
 
     @Test
-    void listGames_401() throws DataAccessException {
+    void listGames401() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
         userService.register(registerRequest);
 
@@ -192,7 +187,7 @@ public class ServiceTests {
     }
 
     @Test
-    void joinGame_200() throws DataAccessException {
+    void joinGame200() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
         RegisterResult registerResult = userService.register(registerRequest);
 
@@ -207,7 +202,7 @@ public class ServiceTests {
     }
 
     @Test
-    void joinGame_400_fake_game() throws DataAccessException {
+    void joinGame400FakeGame() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
         RegisterResult registerResult = userService.register(registerRequest);
 
@@ -218,7 +213,7 @@ public class ServiceTests {
     }
 
     @Test
-    void joinGame_400_bad_color() throws DataAccessException {
+    void joinGame400BadColor() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
         RegisterResult registerResult = userService.register(registerRequest);
 
@@ -232,7 +227,7 @@ public class ServiceTests {
     }
 
     @Test
-    void joinGame_401() throws DataAccessException {
+    void joinGame401() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
         userService.register(registerRequest);
 
@@ -243,7 +238,7 @@ public class ServiceTests {
     }
 
     @Test
-    void joinGame_403() throws DataAccessException {
+    void joinGame403() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("isaac", "password", "email");
         RegisterResult registerResult = userService.register(registerRequest);
 

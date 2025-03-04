@@ -3,9 +3,12 @@ package service;
 import dataaccess.AuthDao;
 import dataaccess.GameDao;
 import dataaccess.UserDao;
+import http.request.*;
+import http.result.BlankResult;
+import http.result.LoginResult;
+import http.result.RegisterResult;
 import model.AuthData;
 import model.UserData;
-import requestResult.*;
 
 public class UserService extends Service {
     public UserService(UserDao users, GameDao games, AuthDao tokens) {

@@ -4,8 +4,11 @@ import chess.ChessGame;
 import dataaccess.AuthDao;
 import dataaccess.GameDao;
 import dataaccess.UserDao;
+import http.request.*;
+import http.result.BlankResult;
+import http.result.CreateGameResult;
+import http.result.ListGamesResult;
 import model.GameData;
-import requestResult.*;
 
 import java.util.ArrayList;
 import java.util.Collection;

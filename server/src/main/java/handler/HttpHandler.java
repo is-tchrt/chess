@@ -2,7 +2,8 @@ package handler;
 
 import com.google.gson.Gson;
 import dataaccess.*;
-import requestResult.*;
+import http.request.*;
+import http.result.*;
 import service.GameService;
 import service.Service;
 import service.UserService;

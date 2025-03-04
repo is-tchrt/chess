@@ -1,4 +1,4 @@
-package requestResult;
+package http.request;
 
 import model.AuthData;
 
