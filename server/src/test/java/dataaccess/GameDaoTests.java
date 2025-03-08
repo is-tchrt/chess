@@ -38,4 +38,12 @@ public class GameDaoTests {
         }
         assert !error.isBlank();
     }
+
+    @Test
+    public void clearGames() throws DataAccessException {
+        GameData game = new GameData(1, null, null, "gameName", new ChessGame());
+        games.addGame(game);
+        games.clearGames();
+        assertDoesNotThrow(() -> games.addGame(game));
+    }
 }
