@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class GameDaoTests {
     GameDao games;
@@ -13,6 +14,7 @@ public class GameDaoTests {
     @BeforeEach
     public void initializeDatabase() throws DataAccessException {
         games = new MySqlGameDao();
+        games.clearGames();
     }
 
     @Test
@@ -20,5 +22,20 @@ public class GameDaoTests {
         GameData game = new GameData(1, null, null, "gameName", new ChessGame());
 
         assertDoesNotThrow(() -> games.addGame(game));
+    }
+
+    @Test
+    public void addDuplicateGame() throws DataAccessException {
+        GameData game1 = new GameData(1, null, null, "gameName", new ChessGame());
+        GameData game2 = new GameData(1, null, null, "gameName2", new ChessGame());
+
+        games.addGame(game1);
+        String error = "";
+        try {
+            games.addGame(game2);
+        } catch (Exception e) {
+            error = e.getMessage();
+        }
+        assert !error.isBlank();
     }
 }
