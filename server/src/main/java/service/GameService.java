@@ -2,6 +2,7 @@ package service;
 
 import chess.ChessGame;
 import dataaccess.AuthDao;
+import dataaccess.DataAccessException;
 import dataaccess.GameDao;
 import dataaccess.UserDao;
 import http.request.*;
@@ -53,7 +54,7 @@ public class GameService extends Service {
         return result;
     }
 
-    public BlankResult joinGame(JoinGameRequest request, String authToken) {
+    public BlankResult joinGame(JoinGameRequest request, String authToken) throws DataAccessException {
         BlankResult result;
         if (!isValidAuthToken(authToken)) {
             result = new BlankResult("Error: unauthorized");
@@ -83,11 +84,11 @@ public class GameService extends Service {
         return (playerColor != null) && (playerColor.equals("WHITE") || playerColor.equals("BLACK"));
     }
 
-    private boolean isValidGameID(int gameID) {
+    private boolean isValidGameID(int gameID) throws DataAccessException {
         return games.getGame(gameID) != null;
     }
 
-    private boolean isAvailablePlayerColor(JoinGameRequest request) {
+    private boolean isAvailablePlayerColor(JoinGameRequest request) throws DataAccessException {
         GameData gameData = games.getGame(request.gameID());
         if (request.playerColor().equals("WHITE")) {
             return gameData.whiteUsername() == null;
