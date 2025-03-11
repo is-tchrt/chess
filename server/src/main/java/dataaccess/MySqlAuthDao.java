@@ -42,7 +42,15 @@ public class MySqlAuthDao implements AuthDao {
 
     @Override
     public AuthData getAuthData(String authToken) throws DataAccessException {
-        throw new RuntimeException("Not implemented");
+        try (Connection conn = DatabaseManager.getConnection()) {
+            String statement = "SELECT authToken, username FROM tokens WHERE authToken=?;";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                ps.setString(1, authToken);
+                return formatGetAuthTokenResult(ps);
+            }
+        } catch (Exception e) {
+            throw new DataAccessException("Error reading database: ".concat(e.getMessage()));
+        }
     }
 
     @Override
@@ -114,6 +122,20 @@ public class MySqlAuthDao implements AuthDao {
                 result.add(new AuthData(authToken, username));
             }
             return result;
+        } catch (Exception e) {
+            throw new DataAccessException("Error executing query: ".concat(e.getMessage()));
+        }
+    }
+
+    private AuthData formatGetAuthTokenResult(PreparedStatement ps) throws DataAccessException {
+        try (ResultSet resultSet = ps.executeQuery()) {
+            if (resultSet.next()) {
+                String authToken = resultSet.getString("authToken");
+                String username = resultSet.getString("username");
+                return new AuthData(authToken, username);
+            } else {
+                return null;
+            }
         } catch (Exception e) {
             throw new DataAccessException("Error executing query: ".concat(e.getMessage()));
         }
