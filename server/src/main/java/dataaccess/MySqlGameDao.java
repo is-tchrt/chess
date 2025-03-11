@@ -51,6 +51,11 @@ public class MySqlGameDao implements GameDao {
     }
 
     @Override
+    public void updateGame(GameData game) throws DataAccessException {
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
     public Collection<GameData> listGames() throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
             String statement = "SELECT gameID, whiteUsername, blackUsername, gameName FROM games;";
