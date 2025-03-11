@@ -57,8 +57,21 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
-    public UserData getUserByNameAndPassword(String username, String password) {
-        throw new RuntimeException("Not implemented");
+    public UserData getUserByNameAndPassword(String username, String password) throws DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            String statement = "SELECT username, password, email FROM users WHERE username=?;";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                ps.setString(1, username);
+                UserData user = formatGetUserResult(ps);
+                if (user != null && BCrypt.checkpw(password, user.password())) {
+                    return user;
+                } else {
+                    return null;
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException("Error reading database: ".concat(e.getMessage()));
+        }
     }
 
     @Override
