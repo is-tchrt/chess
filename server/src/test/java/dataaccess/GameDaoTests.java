@@ -86,4 +86,15 @@ public class GameDaoTests {
         GameData result = games.getGame(1);
         assert game1.equals(result);
     }
+
+    @Test
+    public void getNonexistentGame() throws DataAccessException {
+        GameData game1 =
+                new GameData(1, null, null, "game1", new ChessGame());
+
+        games.addGame(game1);
+
+        GameData result = games.getGame(2);
+        assert result == null;
+    }
 }
