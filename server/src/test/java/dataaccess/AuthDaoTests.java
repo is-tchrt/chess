@@ -89,4 +89,21 @@ public class AuthDaoTests {
         AuthData result = tokens.getAuthData("authToken");
         assert result == null;
     }
+
+    @Test
+    public void removeAuthToken() throws DataAccessException {
+        AuthData token =
+                new AuthData("authToken", "name");
+
+        tokens.addAuthToken(token);
+
+        tokens.removeAuthData("authToken");
+        assert tokens.getAuthData(token.authToken()) == null;
+    }
+
+    @Test
+    public void removeNonexistentAuthToken() throws DataAccessException {
+        tokens.removeAuthData("authToken");
+        assertDoesNotThrow(() -> tokens.removeAuthData("authToken"));
+    }
 }
