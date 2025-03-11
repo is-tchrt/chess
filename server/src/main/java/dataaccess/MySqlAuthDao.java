@@ -48,7 +48,8 @@ public class MySqlAuthDao implements AuthDao {
                 `authToken` varchar(256),
                 `username` varchar(256),
                 PRIMARY KEY (`id`),
-                INDEX(authToken)
+                INDEX(authToken),
+                UNIQUE(username)
             );
             """
     };
