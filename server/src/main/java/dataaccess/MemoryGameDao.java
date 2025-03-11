@@ -19,6 +19,11 @@ public class MemoryGameDao implements GameDao {
     }
 
     @Override
+    public void updateGame(GameData game) {
+        games.put(game.gameID(), game);
+    }
+
+    @Override
     public Collection<GameData> listGames() {
         return games.values();
     }
