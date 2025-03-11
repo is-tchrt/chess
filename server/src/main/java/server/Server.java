@@ -1,10 +1,15 @@
 package server;
 
+import dataaccess.DataAccessException;
 import handler.HttpHandler;
 import spark.*;
 
 public class Server {
-    HttpHandler httpHandler = new HttpHandler();
+    HttpHandler httpHandler;
+
+    public Server() {
+        httpHandler = new HttpHandler();
+    }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
@@ -20,8 +25,7 @@ public class Server {
         Spark.post("/game", httpHandler::createGame);
         Spark.put("/game", httpHandler::joinGame);
 
-        //This line initializes the server and can be removed once you have a functioning endpoint 
-        Spark.init();
+        //This line initializes the server and can be removed once you have a functioning endpoint
 
         Spark.awaitInitialization();
         return Spark.port();
