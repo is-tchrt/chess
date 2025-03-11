@@ -77,6 +77,11 @@ public class GameDaoTests {
     }
 
     @Test
+    public void listEmptyGames() throws DataAccessException {
+        assert games.listGames().isEmpty();
+    }
+
+    @Test
     public void getGame() throws DataAccessException {
         GameData game1 =
                 new GameData(1, null, null, "game1", new ChessGame());

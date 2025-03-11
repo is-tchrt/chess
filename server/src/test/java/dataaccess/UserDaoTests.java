@@ -82,6 +82,11 @@ public class UserDaoTests {
     }
 
     @Test
+    public void listEmptyUsers() throws DataAccessException {
+        assert users.listUsers().isEmpty();
+    }
+
+    @Test
     public void getUser() throws DataAccessException {
         UserData user =
                 new UserData("username", "password", "email");

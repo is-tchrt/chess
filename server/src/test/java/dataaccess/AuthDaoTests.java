@@ -72,6 +72,11 @@ public class AuthDaoTests {
     }
 
     @Test
+    public void listEmptyAuthTokens() throws DataAccessException {
+        assert tokens.listAuthTokens().isEmpty();
+    }
+
+    @Test
     public void getAuthToken() throws DataAccessException {
         AuthData token =
                 new AuthData("authToken", "name");
