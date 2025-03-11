@@ -54,16 +54,20 @@ public class GameService extends Service {
         return result;
     }
 
-    public BlankResult joinGame(JoinGameRequest request, String authToken) throws DataAccessException {
+    public BlankResult joinGame(JoinGameRequest request, String authToken) {
         BlankResult result;
-        if (!isValidAuthToken(authToken)) {
-            result = new BlankResult("Error: unauthorized");
-        } else if (!isValidPlayerColor(request.playerColor()) || !isValidGameID(request.gameID())) {
-            result = new BlankResult("Error: bad request");
-        } else if (!isAvailablePlayerColor(request)) {
-            result = new BlankResult("Error: already taken");
-        } else {
-            result = joinGameWithValidRequest(request, authToken);
+        try {
+            if (!isValidAuthToken(authToken)) {
+                result = new BlankResult("Error: unauthorized");
+            } else if (!isValidPlayerColor(request.playerColor()) || !isValidGameID(request.gameID())) {
+                result = new BlankResult("Error: bad request");
+            } else if (!isAvailablePlayerColor(request)) {
+                result = new BlankResult("Error: already taken");
+            } else {
+                result = joinGameWithValidRequest(request, authToken);
+            }
+        } catch (Exception e) {
+            result = new BlankResult("Error: ".concat(e.getMessage()));
         }
         return result;
     }

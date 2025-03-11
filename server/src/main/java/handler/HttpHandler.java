@@ -60,7 +60,7 @@ public class HttpHandler {
         return new Gson().toJson(result);
     }
 
-    public Object joinGame(Request req, Response res) throws DataAccessException {
+    public Object joinGame(Request req, Response res) {
         JoinGameRequest request = new Gson().fromJson(req.body(), JoinGameRequest.class);
         BlankResult result = gameService.joinGame(request, req.headers("authorization"));
         res.status(getStatusCodeFromMessage(result.message()));
