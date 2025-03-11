@@ -17,7 +17,7 @@ public class MySqlAuthDao implements AuthDao {
 
     @Override
     public void clearAuthTokens() throws DataAccessException {
-        throw new RuntimeException("Not implemented");
+        executeUpdate("TRUNCATE tokens");
     }
 
     @Override
