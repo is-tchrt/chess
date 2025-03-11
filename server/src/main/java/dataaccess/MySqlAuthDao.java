@@ -4,7 +4,9 @@ import model.AuthData;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import static java.sql.Types.NULL;
@@ -28,7 +30,14 @@ public class MySqlAuthDao implements AuthDao {
 
     @Override
     public Collection<AuthData> listAuthTokens() throws DataAccessException {
-        throw new RuntimeException("Not implemented");
+        try (Connection conn = DatabaseManager.getConnection()) {
+            String statement = "SELECT authToken, username FROM tokens;";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                return formatListAuthTokensResult(ps);
+            }
+        } catch (Exception e) {
+            throw new DataAccessException("Error reading database: ".concat(e.getMessage()));
+        }
     }
 
     @Override
@@ -94,5 +103,19 @@ public class MySqlAuthDao implements AuthDao {
             }
         }
         return ps;
+    }
+
+    private ArrayList<AuthData> formatListAuthTokensResult(PreparedStatement ps) throws DataAccessException {
+        ArrayList<AuthData> result = new ArrayList<>();
+        try (ResultSet resultSet = ps.executeQuery()) {
+            while (resultSet.next()) {
+                String authToken = resultSet.getString("authToken");
+                String username = resultSet.getString("username");
+                result.add(new AuthData(authToken, username));
+            }
+            return result;
+        } catch (Exception e) {
+            throw new DataAccessException("Error executing query: ".concat(e.getMessage()));
+        }
     }
 }
