@@ -6,10 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class GameDaoTests {
     GameDao games;
@@ -57,8 +55,6 @@ public class GameDaoTests {
 
     @Test
     public void updateNonexistentGame() throws DataAccessException {
-        GameData game = new GameData(1, null, null, "gameName", new ChessGame());
-
         assert games.listGames().isEmpty();
     }
 
