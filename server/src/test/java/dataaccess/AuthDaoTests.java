@@ -26,9 +26,10 @@ public class AuthDaoTests {
     }
 
     @Test
-    public void addAuthTokenDuplicateUsername() throws DataAccessException {
-        AuthData token = new AuthData(UUID.randomUUID().toString(), "duplicate name");
-        AuthData token2 = new AuthData(UUID.randomUUID().toString(), "duplicate name");
+    public void addAuthTokenDuplicateAuthToken() throws DataAccessException {
+        String authToken = UUID.randomUUID().toString();
+        AuthData token = new AuthData(authToken, "name");
+        AuthData token2 = new AuthData(authToken, "name2");
 
         tokens.addAuthToken(token);
 
