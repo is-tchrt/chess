@@ -43,6 +43,26 @@ public class GameDaoTests {
     }
 
     @Test
+    public void updateGame() throws DataAccessException {
+        GameData game1 = new GameData(1, null, null, "gameName", new ChessGame());
+        GameData game2 = new GameData(1, null, null, "gameName2", new ChessGame());
+
+        games.addGame(game1);
+
+        games.updateGame(game2);
+
+        GameData newGame = games.getGame(1);
+        assert newGame.equals(game2);
+    }
+
+    @Test
+    public void updateNonexistentGame() throws DataAccessException {
+        GameData game = new GameData(1, null, null, "gameName", new ChessGame());
+
+        assert games.listGames().isEmpty();
+    }
+
+    @Test
     public void clearGames() throws DataAccessException {
         GameData game = new GameData(1, null, null, "gameName", new ChessGame());
         games.addGame(game);
