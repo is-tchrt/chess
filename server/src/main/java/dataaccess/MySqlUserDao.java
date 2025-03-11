@@ -75,8 +75,9 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
-    public void removeUser(String username) {
-        throw new RuntimeException("Not implemented");
+    public void removeUser(String username) throws DataAccessException {
+        String statement = "DELETE FROM users WHERE username=?;";
+        executeUpdate(statement, username);
     }
 
     private final String[] createStatements = {
