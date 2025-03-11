@@ -57,17 +57,19 @@ public class GameDaoTests {
         GameData game2 = new GameData(2, "white", null, "game2", new ChessGame());
         GameData game3 = new GameData(3, null, "black", "game3", new ChessGame());
 
+        games.addGame(game1);
+        games.addGame(game2);
+        games.addGame(game3);
+
+        game1 = new GameData(1, null, null, "game1", null);
+        game2 = new GameData(2, "white", null, "game2", null);
+        game3 = new GameData(3, null, "black", "game3", null);
+
         expected.add(game1);
         expected.add(game2);
         expected.add(game3);
 
-        for (GameData game : expected) {
-            games.addGame(game);
-        }
-
         ArrayList<GameData> actual = new ArrayList<>(games.listGames());
-        System.out.println(expected);
-        System.out.println(actual);
         assert expected.equals(actual);
     }
 }
