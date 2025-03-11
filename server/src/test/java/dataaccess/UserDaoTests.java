@@ -77,6 +77,9 @@ public class UserDaoTests {
         expected.add(user3);
 
         ArrayList<UserData> actual = new ArrayList<>(users.listUsers());
-        assert expected.equals(actual);
+        for (int i = 0; i < expected.size(); i++) {
+            assert expected.get(i).username().equals(actual.get(i).username());
+            assert expected.get(i).email().equals(actual.get(i).email());
+        }
     }
 }

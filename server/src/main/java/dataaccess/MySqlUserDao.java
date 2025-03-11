@@ -1,11 +1,14 @@
 package dataaccess;
 
+import model.AuthData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import static java.sql.Types.NULL;
@@ -29,8 +32,15 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
-    public Collection<UserData> listUsers() {
-        throw new RuntimeException("Not implemented");
+    public Collection<UserData> listUsers() throws DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            String statement = "SELECT username, password, email FROM users;";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                return formatListUsersResult(ps);
+            }
+        } catch (Exception e) {
+            throw new DataAccessException("Error reading database: ".concat(e.getMessage()));
+        }
     }
 
     @Override
@@ -103,5 +113,20 @@ public class MySqlUserDao implements UserDao {
             }
         }
         return ps;
+    }
+
+    private ArrayList<UserData> formatListUsersResult(PreparedStatement ps) throws DataAccessException {
+        ArrayList<UserData> result = new ArrayList<>();
+        try (ResultSet resultSet = ps.executeQuery()) {
+            while (resultSet.next()) {
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                String email = resultSet.getString("email");
+                result.add(new UserData(username, password, email));
+            }
+            return result;
+        } catch (Exception e) {
+            throw new DataAccessException("Error executing query: ".concat(e.getMessage()));
+        }
     }
 }
