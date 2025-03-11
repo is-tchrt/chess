@@ -55,7 +55,8 @@ public class MySqlAuthDao implements AuthDao {
 
     @Override
     public void removeAuthData(String authToken) throws DataAccessException {
-        throw new RuntimeException("Not implemented");
+        String statement = "DELETE FROM tokens WHERE authToken=?;";
+        executeUpdate(statement, authToken);
     }
 
     private final String[] createStatements = {

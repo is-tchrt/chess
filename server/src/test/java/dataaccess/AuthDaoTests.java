@@ -103,7 +103,6 @@ public class AuthDaoTests {
 
     @Test
     public void removeNonexistentAuthToken() throws DataAccessException {
-        tokens.removeAuthData("authToken");
         assertDoesNotThrow(() -> tokens.removeAuthData("authToken"));
     }
 }
