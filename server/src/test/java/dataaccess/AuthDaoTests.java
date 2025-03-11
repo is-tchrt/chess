@@ -72,4 +72,21 @@ public class AuthDaoTests {
         ArrayList<AuthData> actual = new ArrayList<>(tokens.listAuthTokens());
         assert expected.equals(actual);
     }
+
+    @Test
+    public void getAuthToken() throws DataAccessException {
+        AuthData token =
+                new AuthData("authToken", "name");
+
+        tokens.addAuthToken(token);
+
+        AuthData result = tokens.getAuthData("authToken");
+        assert token.equals(result);
+    }
+
+    @Test
+    public void getNonexistentAuthToken() throws DataAccessException {
+        AuthData result = tokens.getAuthData("authToken");
+        assert result == null;
+    }
 }
