@@ -100,4 +100,22 @@ public class UserDaoTests {
         UserData result = users.getUser("username");
         assert result == null;
     }
+
+    @Test
+    public void getUserByNameAndPassword() throws DataAccessException {
+        UserData user =
+                new UserData("username", "password", "email");
+
+        users.addUser(user);
+
+        UserData result = users.getUserByNameAndPassword("username", "password");
+        assert user.username().equals(result.username());
+        assert user.email().equals(result.email());
+    }
+
+    @Test
+    public void getNonexistentUserByNameAndPassword() throws DataAccessException {
+        UserData result = users.getUserByNameAndPassword("username", "password");
+        assert result == null;
+    }
 }
