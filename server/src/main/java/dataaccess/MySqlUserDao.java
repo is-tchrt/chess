@@ -44,8 +44,16 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
-    public UserData getUser(String username) {
-        throw new RuntimeException("Not implemented");
+    public UserData getUser(String username) throws DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            String statement = "SELECT username, password, email FROM users WHERE username=?;";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                ps.setString(1, username);
+                return formatGetUserResult(ps);
+            }
+        } catch (Exception e) {
+            throw new DataAccessException("Error reading database: ".concat(e.getMessage()));
+        }
     }
 
     @Override
@@ -125,6 +133,21 @@ public class MySqlUserDao implements UserDao {
                 result.add(new UserData(username, password, email));
             }
             return result;
+        } catch (Exception e) {
+            throw new DataAccessException("Error executing query: ".concat(e.getMessage()));
+        }
+    }
+
+    private UserData formatGetUserResult(PreparedStatement ps) throws DataAccessException {
+        try (ResultSet resultSet = ps.executeQuery()) {
+            if (resultSet.next()) {
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                String email = resultSet.getString("email");
+                return new UserData(username, password, email);
+            } else {
+                return null;
+            }
         } catch (Exception e) {
             throw new DataAccessException("Error executing query: ".concat(e.getMessage()));
         }
