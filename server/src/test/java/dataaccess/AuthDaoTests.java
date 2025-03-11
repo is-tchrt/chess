@@ -1,8 +1,6 @@
 package dataaccess;
 
-import chess.ChessGame;
 import model.AuthData;
-import model.GameData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -102,7 +100,7 @@ public class AuthDaoTests {
     }
 
     @Test
-    public void removeNonexistentAuthToken() throws DataAccessException {
+    public void removeNonexistentAuthToken(){
         assertDoesNotThrow(() -> tokens.removeAuthData("authToken"));
     }
 }
