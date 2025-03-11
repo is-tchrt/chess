@@ -17,8 +17,8 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
-    public void clearUsers() {
-        throw new RuntimeException("Not implemented");
+    public void clearUsers() throws DataAccessException {
+        executeUpdate("TRUNCATE users");
     }
 
     @Override

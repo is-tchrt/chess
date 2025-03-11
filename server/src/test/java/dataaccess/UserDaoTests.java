@@ -15,7 +15,7 @@ public class UserDaoTests {
     @BeforeEach
     public void initializeDatabase() throws DataAccessException {
         users = new MySqlUserDao();
-//        tokens.clearAuthTokens();
+        users.clearUsers();
     }
 
     @Test
