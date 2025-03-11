@@ -6,6 +6,7 @@ import model.GameData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -48,5 +49,27 @@ public class AuthDaoTests {
         tokens.addAuthToken(token);
         tokens.clearAuthTokens();
         assertDoesNotThrow(() -> tokens.addAuthToken(token));
+    }
+
+    @Test
+    public void listAuthTokens() throws DataAccessException {
+        ArrayList<AuthData> expected = new ArrayList<>();
+        AuthData token1 =
+                new AuthData("id1", "name1");
+        AuthData token2 =
+                new AuthData("id2", "name2");
+        AuthData token3 =
+                new AuthData("id3", "name3");
+
+        tokens.addAuthToken(token1);
+        tokens.addAuthToken(token2);
+        tokens.addAuthToken(token3);
+
+        expected.add(token1);
+        expected.add(token2);
+        expected.add(token3);
+
+        ArrayList<AuthData> actual = new ArrayList<>(tokens.listAuthTokens());
+        assert expected.equals(actual);
     }
 }
