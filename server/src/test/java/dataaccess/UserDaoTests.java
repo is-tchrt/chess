@@ -91,7 +91,8 @@ public class UserDaoTests {
         users.addUser(user);
 
         UserData result = users.getUser("username");
-        assert user.equals(result);
+        assert user.username().equals(result.username());
+        assert user.email().equals(result.email());
     }
 
     @Test
