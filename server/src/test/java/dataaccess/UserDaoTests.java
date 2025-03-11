@@ -118,4 +118,15 @@ public class UserDaoTests {
         UserData result = users.getUserByNameAndPassword("username", "password");
         assert result == null;
     }
+
+    @Test
+    public void removeUser() throws DataAccessException {
+        UserData user =
+                new UserData("username", "password", "email");
+
+        users.addUser(user);
+
+        users.removeUser("username");
+        assert users.getUser(user.username()) == null;
+    }
 }
