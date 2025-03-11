@@ -25,7 +25,7 @@ public class Service {
         tokens.clearAuthTokens();
     }
 
-    protected boolean isValidAuthToken(String authToken) {
+    protected boolean isValidAuthToken(String authToken) throws DataAccessException {
         AuthData result = tokens.getAuthData(authToken);
         if (result == null) {
             return false;
