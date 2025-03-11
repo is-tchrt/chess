@@ -57,7 +57,6 @@ public class UserService extends Service {
             if (isValidAuthToken(request.authToken())) {
                 AuthData authData = tokens.getAuthData(request.authToken());
                 tokens.removeAuthData(authData.authToken());
-                users.removeUser(authData.username());
                 result = new BlankResult(null);
             } else {
                 result = new BlankResult("Error: unauthorized");

@@ -108,7 +108,6 @@ public class ServiceTests {
         BlankResult result = userService.logout(logoutRequest);
 
         assert result.message() == null;
-        assert users.getUser(registerResult.username()) == null;
         assert tokens.getAuthData(registerResult.authToken()) == null;
     }
 
