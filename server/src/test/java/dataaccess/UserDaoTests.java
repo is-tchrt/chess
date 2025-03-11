@@ -127,4 +127,9 @@ public class UserDaoTests {
         users.removeUser("username");
         assert users.getUser(user.username()) == null;
     }
+
+    @Test
+    public void removeNonexistentUser(){
+        assertDoesNotThrow(() -> users.removeUser("authToken"));
+    }
 }
