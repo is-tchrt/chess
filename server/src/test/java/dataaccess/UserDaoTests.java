@@ -82,4 +82,21 @@ public class UserDaoTests {
             assert expected.get(i).email().equals(actual.get(i).email());
         }
     }
+
+    @Test
+    public void getUser() throws DataAccessException {
+        UserData user =
+                new UserData("username", "password", "email");
+
+        users.addUser(user);
+
+        UserData result = users.getUser("username");
+        assert user.equals(result);
+    }
+
+    @Test
+    public void getNonexistentUser() throws DataAccessException {
+        UserData result = users.getUser("username");
+        assert result == null;
+    }
 }
