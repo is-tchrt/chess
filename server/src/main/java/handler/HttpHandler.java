@@ -11,10 +11,6 @@ import spark.Request;
 import spark.Response;
 
 public class HttpHandler {
-//    UserDao userDao = new MemoryUserDao();
-//    GameDao gameDao = new MemoryGameDao();
-//    AuthDao authDao = new MemoryAuthDao();
-
     UserDao userDao;
     GameDao gameDao;
     AuthDao authDao;
