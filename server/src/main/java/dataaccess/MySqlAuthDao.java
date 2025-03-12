@@ -5,16 +5,13 @@ import model.AuthData;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static java.sql.Types.NULL;
-
-public class MySqlAuthDao implements AuthDao {
+public class MySqlAuthDao extends MySqlDao implements AuthDao {
 
     public MySqlAuthDao() throws DataAccessException {
-        configureDatabase();
+        configureDatabase(createStatements);
     }
 
     @Override
@@ -70,48 +67,6 @@ public class MySqlAuthDao implements AuthDao {
             );
             """
     };
-
-    private void configureDatabase() throws DataAccessException {
-        try {
-            DatabaseManager.createDatabase();
-        } catch(DataAccessException e) {
-            throw new RuntimeException(String.format("Error creating database: %s", e.getMessage()));
-        }
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (Exception e) {
-            throw new DataAccessException("Error configuring database: ".concat(e.getMessage()));
-        }
-    }
-
-    private void executeUpdate(String statement, Object... params) throws DataAccessException {
-        try (Connection conn = DatabaseManager.getConnection()) {
-            try (PreparedStatement ps = conn.prepareStatement(statement)) {
-                PreparedStatement updatedStatement = setStatementVariables(ps, params);
-                updatedStatement.executeUpdate();
-            }
-        } catch (Exception e) {
-            throw new DataAccessException("Error updating database: ".concat(e.getMessage()));
-        }
-    }
-
-    private PreparedStatement setStatementVariables(PreparedStatement ps, Object ... params) throws SQLException {
-        for (int i = 0; i < params.length; i++) {
-            var param = params[i];
-            switch (param) {
-                case Integer p -> ps.setInt(i + 1, p);
-                case String p -> ps.setString(i + 1, p);
-                case null -> ps.setNull(i + 1, NULL);
-                default -> {
-                }
-            }
-        }
-        return ps;
-    }
 
     private ArrayList<AuthData> formatListAuthTokensResult(PreparedStatement ps) throws DataAccessException {
         ArrayList<AuthData> result = new ArrayList<>();

@@ -10,10 +10,10 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MySqlGameDao implements GameDao {
+public class MySqlGameDao extends MySqlDao implements GameDao {
 
     public MySqlGameDao() throws DataAccessException {
-        configureDatabase();
+        configureDatabase(createStatements);
     }
 
     @Override
@@ -33,18 +33,7 @@ public class MySqlGameDao implements GameDao {
         String statement =
                 "INSERT INTO games (gameID, whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?, ?)";
         String gameDataJson = new Gson().toJson(game.game());
-        try (Connection conn = DatabaseManager.getConnection()) {
-            try (PreparedStatement preparedStatement = conn.prepareStatement(statement)) {
-                preparedStatement.setInt(1, game.gameID());
-                preparedStatement.setString(2, game.whiteUsername());
-                preparedStatement.setString(3, game.blackUsername());
-                preparedStatement.setString(4, game.gameName());
-                preparedStatement.setString(5, gameDataJson);
-                preparedStatement.executeUpdate();
-            }
-        } catch (Exception e) {
-            throw new DataAccessException("Error updating database: ".concat(e.getMessage()));
-        }
+        executeUpdate(statement, game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), gameDataJson);
     }
 
     @Override
@@ -52,18 +41,7 @@ public class MySqlGameDao implements GameDao {
         String statement =
                 "UPDATE games SET whiteUsername=?, blackUsername=?, gameName=?, game=? WHERE gameID=?";
         String gameDataJson = new Gson().toJson(game.game());
-        try (Connection conn = DatabaseManager.getConnection()) {
-            try (PreparedStatement preparedStatement = conn.prepareStatement(statement)) {
-                preparedStatement.setString(1, game.whiteUsername());
-                preparedStatement.setString(2, game.blackUsername());
-                preparedStatement.setString(3, game.gameName());
-                preparedStatement.setString(4, gameDataJson);
-                preparedStatement.setInt(5, game.gameID());
-                preparedStatement.executeUpdate();
-            }
-        } catch (Exception e) {
-            throw new DataAccessException("Error updating database: ".concat(e.getMessage()));
-        }
+        executeUpdate(statement, game.whiteUsername(), game.blackUsername(), game.gameName(), gameDataJson, game.gameID());
     }
 
     @Override
@@ -103,23 +81,6 @@ public class MySqlGameDao implements GameDao {
             );
             """
     };
-
-    private void configureDatabase() throws DataAccessException {
-        try {
-            DatabaseManager.createDatabase();
-        } catch(DataAccessException e) {
-            throw new RuntimeException(String.format("Error creating database: %s", e.getMessage()));
-        }
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (Exception e) {
-            throw new DataAccessException("Error configuring database: ".concat(e.getMessage()));
-        }
-    }
 
     private ArrayList<GameData> formatListGameResult(PreparedStatement ps) throws DataAccessException {
         ArrayList<GameData> result = new ArrayList<>();
