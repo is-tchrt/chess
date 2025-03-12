@@ -12,6 +12,20 @@ import java.util.Collection;
 public class MySqlUserDao extends MySqlDao implements UserDao {
 
     public MySqlUserDao() throws DataAccessException {
+        String[] createStatements = {
+                """
+            CREATE TABLE IF NOT EXISTS users (
+                `id` int NOT NULL AUTO_INCREMENT,
+                `username` varchar(256),
+                `password` varchar(256),
+                `email` varchar(256),
+                PRIMARY KEY (`id`),
+                INDEX(username),
+                INDEX(password),
+                UNIQUE(username)
+            );
+            """
+        };
         configureDatabase(createStatements);
     }
 
@@ -75,21 +89,6 @@ public class MySqlUserDao extends MySqlDao implements UserDao {
         String statement = "DELETE FROM users WHERE username=?;";
         executeUpdate(statement, username);
     }
-
-    private final String[] createStatements = {
-            """
-            CREATE TABLE IF NOT EXISTS users (
-                `id` int NOT NULL AUTO_INCREMENT,
-                `username` varchar(256),
-                `password` varchar(256),
-                `email` varchar(256),
-                PRIMARY KEY (`id`),
-                INDEX(username),
-                INDEX(password),
-                UNIQUE(username)
-            );
-            """
-    };
 
     private ArrayList<UserData> formatListUsersResult(PreparedStatement ps) throws DataAccessException {
         ArrayList<UserData> result = new ArrayList<>();

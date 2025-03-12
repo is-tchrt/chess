@@ -13,6 +13,18 @@ import java.util.Collection;
 public class MySqlGameDao extends MySqlDao implements GameDao {
 
     public MySqlGameDao() throws DataAccessException {
+        String[] createStatements = {
+                """
+            CREATE TABLE IF NOT EXISTS games (
+                `gameID` int NOT NULL,
+                `whiteUsername` varchar(256),
+                `blackUsername` varchar(256),
+                `gameName` varchar(256),
+                `game` TEXT,
+                PRIMARY KEY (`gameID`)
+            );
+            """
+        };
         configureDatabase(createStatements);
     }
 
@@ -68,19 +80,6 @@ public class MySqlGameDao extends MySqlDao implements GameDao {
             throw new DataAccessException("Error reading database: ".concat(e.getMessage()));
         }
     }
-
-    private final String[] createStatements = {
-            """
-            CREATE TABLE IF NOT EXISTS games (
-                `gameID` int NOT NULL,
-                `whiteUsername` varchar(256),
-                `blackUsername` varchar(256),
-                `gameName` varchar(256),
-                `game` TEXT,
-                PRIMARY KEY (`gameID`)
-            );
-            """
-    };
 
     private ArrayList<GameData> formatListGameResult(PreparedStatement ps) throws DataAccessException {
         ArrayList<GameData> result = new ArrayList<>();

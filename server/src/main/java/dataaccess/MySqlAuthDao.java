@@ -11,6 +11,17 @@ import java.util.Collection;
 public class MySqlAuthDao extends MySqlDao implements AuthDao {
 
     public MySqlAuthDao() throws DataAccessException {
+        String[] createStatements = {
+                """
+            CREATE TABLE IF NOT EXISTS tokens (
+                `id` int NOT NULL AUTO_INCREMENT,
+                `authToken` varchar(256),
+                `username` varchar(256),
+                PRIMARY KEY (`id`),
+                UNIQUE INDEX(authToken)
+            );
+            """
+        };
         configureDatabase(createStatements);
     }
 
@@ -55,18 +66,6 @@ public class MySqlAuthDao extends MySqlDao implements AuthDao {
         String statement = "DELETE FROM tokens WHERE authToken=?;";
         executeUpdate(statement, authToken);
     }
-
-    private final String[] createStatements = {
-            """
-            CREATE TABLE IF NOT EXISTS tokens (
-                `id` int NOT NULL AUTO_INCREMENT,
-                `authToken` varchar(256),
-                `username` varchar(256),
-                PRIMARY KEY (`id`),
-                UNIQUE INDEX(authToken)
-            );
-            """
-    };
 
     private ArrayList<AuthData> formatListAuthTokensResult(PreparedStatement ps) throws DataAccessException {
         ArrayList<AuthData> result = new ArrayList<>();
