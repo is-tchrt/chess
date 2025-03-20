@@ -1,6 +1,6 @@
 package client;
 
-import DataTypes.RegisterResponse;
+import DataTypes.LoginResponse;
 import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
@@ -26,8 +26,8 @@ public class ServerFacade {
         makeRequest("DELETE", "/db", null, null, null);
     }
 
-    public RegisterResponse register(UserData user) {
-        return makeRequest("POST", "/user", user, null, RegisterResponse.class);
+    public LoginResponse register(UserData user) {
+        return makeRequest("POST", "/user", user, null, LoginResponse.class);
     }
 
     public AuthData login(String username, String password) {

@@ -1,7 +1,6 @@
 package client;
 
-import DataTypes.RegisterResponse;
-import model.AuthData;
+import DataTypes.LoginResponse;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
@@ -27,16 +26,10 @@ public class ServerFacadeTests {
         server.stop();
     }
 
-
-    @Test
-    public void sampleTest() {
-        Assertions.assertTrue(true);
-    }
-
     @Test
     public void register() {
         UserData user = new UserData("user", "password", "email");
-        RegisterResponse result = serverFacade.register(user);
+        LoginResponse result = serverFacade.register(user);
 
         assert result.username().equals("user");
         assert !result.authToken().isBlank();
@@ -49,7 +42,7 @@ public class ServerFacadeTests {
 
         serverFacade.register(user);
         try {
-            RegisterResponse result = serverFacade.register(user2);
+            LoginResponse result = serverFacade.register(user2);
         } catch (Exception e) {
             assert e.getMessage().equals("Error: already taken");
         }
@@ -60,9 +53,33 @@ public class ServerFacadeTests {
         UserData user = new UserData("user", "password", "");
 
         try {
-            RegisterResponse result = serverFacade.register(user);
+            LoginResponse result = serverFacade.register(user);
         } catch (Exception e) {
             assert e.getMessage().equals("Error: bad request");
+        }
+    }
+
+    @Test
+    public void login() {
+        UserData user = new UserData("user", "password", "email");
+
+        serverFacade.register(user);
+        LoginResponse response = serverFacade.login(user.username(), user.password());
+
+        assert response.username().equals("user");
+        assert !response.authToken().isBlank();
+    }
+
+    @Test
+    public void loginUnauthorized() {
+        UserData user = new UserData("user", "password", "email");
+
+        serverFacade.register(user);
+
+        try {
+            LoginResponse result = serverFacade.login(user.username(), "wrong password");
+        } catch (Exception e) {
+            assert e.getMessage().equals("Error: unauthorized");
         }
     }
 }
