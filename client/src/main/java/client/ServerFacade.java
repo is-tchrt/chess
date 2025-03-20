@@ -1,5 +1,6 @@
 package client;
 
+import DataTypes.RegisterResponse;
 import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
@@ -25,8 +26,8 @@ public class ServerFacade {
         makeRequest("DELETE", "/db", null, null, null);
     }
 
-    public AuthData register(UserData user) {
-        throw new RuntimeException("Not implemented");
+    public RegisterResponse register(UserData user) {
+        return makeRequest("POST", "/user", user, null, RegisterResponse.class);
     }
 
     public AuthData login(String username, String password) {
@@ -55,7 +56,7 @@ public class ServerFacade {
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             if (authToken != null) {
-                http.setRequestProperty("authorization", authToken);
+                http.addRequestProperty("authorization", authToken);
             }
             http.setDoOutput(true);
             writeBody(request, http);
@@ -81,7 +82,7 @@ public class ServerFacade {
 
     private <T> T readBody(HttpURLConnection http, Class<T> responseType) throws IOException {
         T response = null;
-        if (http.getContentLength() > 0) {
+        if (http.getContentLength() < 0) {
             try (InputStream body = http.getInputStream()) {
                 InputStreamReader reader = new InputStreamReader(body);
                 if (responseType != null) {

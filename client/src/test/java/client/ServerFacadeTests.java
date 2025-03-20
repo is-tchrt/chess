@@ -1,5 +1,6 @@
 package client;
 
+import DataTypes.RegisterResponse;
 import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.*;
@@ -35,7 +36,7 @@ public class ServerFacadeTests {
     @Test
     public void register() {
         UserData user = new UserData("user", "password", "email");
-        AuthData result = serverFacade.register(user);
+        RegisterResponse result = serverFacade.register(user);
 
         assert result.username().equals("user");
         assert !result.authToken().isBlank();
