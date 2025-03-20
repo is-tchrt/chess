@@ -54,4 +54,15 @@ public class ServerFacadeTests {
             assert e.getMessage().equals("Error: already taken");
         }
     }
+
+    @Test
+    public void registerBadRequest() {
+        UserData user = new UserData("user", "password", "");
+
+        try {
+            RegisterResponse result = serverFacade.register(user);
+        } catch (Exception e) {
+            assert e.getMessage().equals("Error: bad request");
+        }
+    }
 }
