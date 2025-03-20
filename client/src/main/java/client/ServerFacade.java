@@ -98,7 +98,7 @@ public class ServerFacade {
         if (!isSuccessful(status)) {
             try (InputStream responseError = http.getErrorStream()) {
                 if (responseError != null) {
-                    throw HttpException.fromStream(responseError);
+                    throw HttpException.fromStream(responseError, status);
                 }
             }
 

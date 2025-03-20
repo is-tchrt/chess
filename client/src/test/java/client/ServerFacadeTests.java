@@ -41,16 +41,17 @@ public class ServerFacadeTests {
         assert result.username().equals("user");
         assert !result.authToken().isBlank();
     }
-//
-//    public void registerDuplicate() {
-//        UserData user = new UserData("user", "password", "email");
-//        UserData user2 = new UserData("user", "password", "email");
-//
-//        serverFacade.register(user);
-//        try {
-//            AuthData result = serverFacade.register(user2);
-//        } catch (Exception e) {
-//            assert e.getMessage().equals("Error: already taken");
-//        }
-//    }
+
+    @Test
+    public void registerDuplicate() {
+        UserData user = new UserData("user", "password", "email");
+        UserData user2 = new UserData("user", "password", "email");
+
+        serverFacade.register(user);
+        try {
+            RegisterResponse result = serverFacade.register(user2);
+        } catch (Exception e) {
+            assert e.getMessage().equals("Error: already taken");
+        }
+    }
 }
