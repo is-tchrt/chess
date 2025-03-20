@@ -22,7 +22,7 @@ public class ServerFacade {
     }
 
     public void clear() {
-        throw new RuntimeException("Not implemented");
+        makeRequest("DELETE", "/db", null, null, null);
     }
 
     public AuthData register(UserData user) {
