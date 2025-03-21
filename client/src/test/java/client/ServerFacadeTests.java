@@ -6,6 +6,8 @@ import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
 
+import java.util.Collection;
+
 
 public class ServerFacadeTests {
 
@@ -141,6 +143,29 @@ public class ServerFacadeTests {
         String result = "";
         try {
             serverFacade.createGame("game", "");
+        } catch (Exception e) {
+            result = e.getMessage();
+        }
+        assert result.equals("Error: unauthorized");
+    }
+
+    @Test
+    public void listGames() {
+        UserData user = new UserData("user", "password", "email");
+        String gameName = "game";
+
+        LoginResponse loginResponse = serverFacade.register(user);
+        serverFacade.createGame(gameName, loginResponse.authToken());
+
+        Collection<GameData> response = serverFacade.listGames(loginResponse.authToken());
+        assert response.size() == 1;
+    }
+
+    @Test
+    public void listGamesUnauthorized() {
+        String result = "";
+        try {
+            serverFacade.listGames("");
         } catch (Exception e) {
             result = e.getMessage();
         }
