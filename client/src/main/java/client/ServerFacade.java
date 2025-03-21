@@ -38,7 +38,7 @@ public class ServerFacade {
         throw new RuntimeException("Not implemented");
     }
 
-    public int createGame(String gameName) {
+    public int createGame(String gameName, String authToken) {
         throw new RuntimeException("Not implemented");
     }
 

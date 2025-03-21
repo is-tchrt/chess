@@ -1,6 +1,7 @@
 package client;
 
 import DataTypes.LoginResponse;
+import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
@@ -81,5 +82,41 @@ public class ServerFacadeTests {
         } catch (Exception e) {
             assert e.getMessage().equals("Error: unauthorized");
         }
+    }
+
+    @Test
+    public void createGame() {
+        UserData user = new UserData("user", "password", "email");
+        String gameName = "game";
+
+        LoginResponse loginResponse = serverFacade.register(user);
+        int response = serverFacade.createGame(gameName, loginResponse.authToken());
+
+        assert response > 0;
+    }
+
+    @Test
+    public void createGameNoName() {
+        UserData user = new UserData("user", "password", "email");
+        LoginResponse loginResponse = serverFacade.register(user);
+
+        String result = "";
+        try {
+            serverFacade.createGame("", loginResponse.authToken());
+        } catch (Exception e) {
+            result = e.getMessage();
+        }
+        assert result.equals("Error: bad request");
+    }
+
+    @Test
+    public void createGameUnauthorized() {
+        String result = "";
+        try {
+            serverFacade.createGame("game", "");
+        } catch (Exception e) {
+            result = e.getMessage();
+        }
+        assert result.equals("Error: unauthorized");
     }
 }
