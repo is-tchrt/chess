@@ -2,7 +2,6 @@ package client;
 
 import DataTypes.*;
 import com.google.gson.Gson;
-import model.AuthData;
 import model.GameData;
 import model.UserData;
 
@@ -13,7 +12,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class ServerFacade {

@@ -1,6 +1,5 @@
 package client;
 
-import DataTypes.CreateGameResponse;
 import DataTypes.LoginResponse;
 import model.GameData;
 import model.UserData;
@@ -47,7 +46,7 @@ public class ServerFacadeTests {
 
         serverFacade.register(user);
         try {
-            LoginResponse result = serverFacade.register(user2);
+            serverFacade.register(user2);
         } catch (Exception e) {
             assert e.getMessage().equals("Error: already taken");
         }
@@ -58,7 +57,7 @@ public class ServerFacadeTests {
         UserData user = new UserData("user", "password", "");
 
         try {
-            LoginResponse result = serverFacade.register(user);
+            serverFacade.register(user);
         } catch (Exception e) {
             assert e.getMessage().equals("Error: bad request");
         }
@@ -82,7 +81,7 @@ public class ServerFacadeTests {
         serverFacade.register(user);
 
         try {
-            LoginResponse result = serverFacade.login(user.username(), "wrong password");
+            serverFacade.login(user.username(), "wrong password");
         } catch (Exception e) {
             assert e.getMessage().equals("Error: unauthorized");
         }
