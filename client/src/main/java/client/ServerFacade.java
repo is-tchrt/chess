@@ -2,6 +2,7 @@ package client;
 
 import DataTypes.CreateGameRequestBody;
 import DataTypes.CreateGameResponse;
+import DataTypes.ListGamesResponse;
 import DataTypes.LoginResponse;
 import com.google.gson.Gson;
 import model.AuthData;
@@ -15,6 +16,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class ServerFacade {
@@ -46,7 +48,7 @@ public class ServerFacade {
     }
 
     public Collection<GameData> listGames(String authToken) {
-        throw new RuntimeException("Not implemented");
+        return makeRequest("GET", "/game", null, authToken, ListGamesResponse.class).games();
     }
 
     public void joinGame(String playerColor, int gameID) {
