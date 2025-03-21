@@ -55,7 +55,7 @@ public class PreLoginClient extends Client {
     }
 
     private String login(String ... params) {
-        if (params.length == 3) {
+        if (params.length == 2) {
             try {
                 LoginResponse response = serverFacade.login(params[0], params[1]);
                 authToken = response.authToken();
