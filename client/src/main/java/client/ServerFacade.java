@@ -51,7 +51,7 @@ public class ServerFacade {
         return makeRequest("GET", "/game", null, authToken, ListGamesResponse.class).games();
     }
 
-    public void joinGame(String playerColor, int gameID) {
+    public void joinGame(String playerColor, int gameID, String authToken) {
         throw new RuntimeException("Not implemented");
     }
 
