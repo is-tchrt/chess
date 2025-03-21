@@ -85,6 +85,33 @@ public class ServerFacadeTests {
     }
 
     @Test
+    public void logout() {
+        UserData user = new UserData("user", "password", "email");
+
+        LoginResponse response = serverFacade.register(user);
+        serverFacade.logout(response.authToken());
+
+        String result = "";
+        try {
+            serverFacade.createGame("game", "");
+        } catch (Exception e) {
+            result = e.getMessage();
+        }
+        assert result.equals("Error: unauthorized");
+    }
+
+    @Test
+    public void logoutUnauthorized() {
+        String result = "";
+        try {
+            serverFacade.logout("");
+        } catch (Exception e) {
+            result = e.getMessage();
+        }
+        assert result.equals("Error: unauthorized");
+    }
+
+    @Test
     public void createGame() {
         UserData user = new UserData("user", "password", "email");
         String gameName = "game";
