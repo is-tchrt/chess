@@ -30,8 +30,8 @@ public class ServerFacade {
         return makeRequest("POST", "/user", user, null, LoginResponse.class);
     }
 
-    public AuthData login(String username, String password) {
-        throw new RuntimeException("Not implemented");
+    public LoginResponse login(String username, String password) {
+        return makeRequest("POST", "/session", new UserData(username, password, null), null, LoginResponse.class);
     }
 
     public void logout(String authToken) {
