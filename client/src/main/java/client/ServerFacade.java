@@ -1,5 +1,7 @@
 package client;
 
+import DataTypes.CreateGameRequestBody;
+import DataTypes.CreateGameResponse;
 import DataTypes.LoginResponse;
 import com.google.gson.Gson;
 import model.AuthData;
@@ -39,7 +41,8 @@ public class ServerFacade {
     }
 
     public int createGame(String gameName, String authToken) {
-        throw new RuntimeException("Not implemented");
+        CreateGameResponse response = makeRequest("POST", "/game", new CreateGameRequestBody(gameName), authToken, CreateGameResponse.class);
+        return response.gameID();
     }
 
     public Collection<GameData> listGames(String authToken) {
