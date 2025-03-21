@@ -40,6 +40,7 @@ public class PreLoginClient extends Client {
                 LoginResponse response = serverFacade.register(new UserData(params[0], params[1], params[2]));
                 authToken = response.authToken();
                 username = response.username();
+                System.out.println("Success!");
                 return "login";
             } catch (HttpException e) {
                 if (e.getStatusCode() == 403) {
@@ -59,6 +60,7 @@ public class PreLoginClient extends Client {
                 LoginResponse response = serverFacade.login(params[0], params[1]);
                 authToken = response.authToken();
                 username = response.username();
+                System.out.println("Success!");
                 return "login";
             } catch (HttpException e) {
                 return "Something went wrong, please check your input and try again.";
