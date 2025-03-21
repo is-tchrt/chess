@@ -1,9 +1,6 @@
 package client;
 
-import DataTypes.CreateGameRequestBody;
-import DataTypes.CreateGameResponse;
-import DataTypes.ListGamesResponse;
-import DataTypes.LoginResponse;
+import DataTypes.*;
 import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
@@ -52,7 +49,8 @@ public class ServerFacade {
     }
 
     public void joinGame(String playerColor, int gameID, String authToken) {
-        throw new RuntimeException("Not implemented");
+        JoinGameRequestBody request = new JoinGameRequestBody(playerColor, gameID);
+        makeRequest("PUT", "/game", request, authToken, null);
     }
 
     private <T> T makeRequest(String method, String path, Object request, String authToken, Class<T> responseType) throws HttpException {

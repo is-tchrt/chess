@@ -183,8 +183,8 @@ public class ServerFacadeTests {
         LoginResponse loginResponse = serverFacade.register(user);
         LoginResponse loginResponse2 = serverFacade.register(user2);
         int gameID = serverFacade.createGame(gameName, loginResponse.authToken());
-        serverFacade.joinGame("white", gameID, loginResponse.authToken());
-        serverFacade.joinGame("black", gameID, loginResponse2.authToken());
+        serverFacade.joinGame("WHITE", gameID, loginResponse.authToken());
+        serverFacade.joinGame("BLACK", gameID, loginResponse2.authToken());
 
         ArrayList<GameData> list = new ArrayList<>(serverFacade.listGames(loginResponse.authToken()));
         assert list.getFirst().whiteUsername().equals(loginResponse.username());
@@ -200,11 +200,11 @@ public class ServerFacadeTests {
         LoginResponse loginResponse = serverFacade.register(user);
         LoginResponse loginResponse2 = serverFacade.register(user2);
         int gameID = serverFacade.createGame(gameName, loginResponse.authToken());
-        serverFacade.joinGame("white", gameID, loginResponse.authToken());
+        serverFacade.joinGame("WHITE", gameID, loginResponse.authToken());
 
         String result = "";
         try {
-            serverFacade.joinGame("white", gameID, loginResponse2.authToken());
+            serverFacade.joinGame("WHITE", gameID, loginResponse2.authToken());
         } catch (Exception e) {
             result = e.getMessage();
         }
@@ -220,7 +220,7 @@ public class ServerFacadeTests {
         LoginResponse loginResponse = serverFacade.register(user);
         LoginResponse loginResponse2 = serverFacade.register(user2);
         int gameID = serverFacade.createGame(gameName, loginResponse.authToken());
-        serverFacade.joinGame("white", gameID, loginResponse.authToken());
+        serverFacade.joinGame("WHITE", gameID, loginResponse.authToken());
 
         String result = "";
         try {
@@ -235,7 +235,7 @@ public class ServerFacadeTests {
     public void joinGameUnauthorized() {
         String result = "";
         try {
-            serverFacade.joinGame("white", 1, "");
+            serverFacade.joinGame("WHITE", 1, "");
         } catch (Exception e) {
             result = e.getMessage();
         }
