@@ -37,7 +37,7 @@ public class ServerFacade {
     }
 
     public void logout(String authToken) {
-        throw new RuntimeException("Not implemented");
+        makeRequest("DELETE", "/session", null, authToken, null);
     }
 
     public int createGame(String gameName, String authToken) {
