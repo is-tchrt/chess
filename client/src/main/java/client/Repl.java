@@ -21,6 +21,9 @@ public class Repl {
             String command = scanner.nextLine();
             try {
                 result = client.eval(command);
+                if (result.equals("login")) {
+                    client = new PostLoginClient(client);
+                }
                 System.out.println(result);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
