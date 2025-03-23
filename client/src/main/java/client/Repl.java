@@ -17,14 +17,19 @@ public class Repl {
         Scanner scanner = new Scanner(System.in);
         String result = "";
         while (!result.equals("quit")) {
-            System.out.print(">>>");
+            System.out.print(">>> ");
             String command = scanner.nextLine();
             try {
                 result = client.eval(command);
                 if (result.equals("login")) {
                     client = new PostLoginClient(client);
+                } else if (result.equals("logout")) {
+                    client = new PreLoginClient(client);
+                } else if (result.equals("quit")) {
+                    break;
+                } else {
+                    System.out.println(result);
                 }
-                System.out.println(result);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }

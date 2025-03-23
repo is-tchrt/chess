@@ -5,13 +5,14 @@ import model.UserData;
 
 import java.util.Arrays;
 
-import static ui.EscapeSequences.SET_TEXT_COLOR_BLACK;
-import static ui.EscapeSequences.SET_TEXT_COLOR_BLUE;
-
 public class PreLoginClient extends Client {
 
     public PreLoginClient(ServerFacade serverFacade) {
         super(serverFacade);
+    }
+
+    public PreLoginClient(Client other) {
+        super(other);
     }
 
     @Override
@@ -22,16 +23,17 @@ public class PreLoginClient extends Client {
         return switch (command) {
             case "register" -> register(parameters);
             case "login" -> login(parameters);
+            case "quit" -> "quit";
             default -> help();
         };
     }
 
     private String help() {
-        return SET_TEXT_COLOR_BLUE + "help" + SET_TEXT_COLOR_BLACK + " - Display possible commands\n" +
-                SET_TEXT_COLOR_BLUE + "register <username> <password> <email>" + SET_TEXT_COLOR_BLACK + " - Create an" +
+        return COMMAND_NAME_COLOR + "help" + COMMAND_DESCRIPTION_COLOR + " - Display possible commands\n" +
+                COMMAND_NAME_COLOR + "register <username> <password> <email>" + COMMAND_DESCRIPTION_COLOR + " - Create an" +
                 " account\n" +
-                SET_TEXT_COLOR_BLUE + "login <username> <password>" + SET_TEXT_COLOR_BLACK + " - Login\n" +
-                SET_TEXT_COLOR_BLUE + "quit" + SET_TEXT_COLOR_BLACK + " - Exit the application";
+                COMMAND_NAME_COLOR + "login <username> <password>" + COMMAND_DESCRIPTION_COLOR + " - Login\n" +
+                COMMAND_NAME_COLOR + "quit" + COMMAND_DESCRIPTION_COLOR + " - Exit the application";
     }
 
     private String register(String ... params) {
@@ -63,6 +65,9 @@ public class PreLoginClient extends Client {
                 System.out.println("Success!");
                 return "login";
             } catch (HttpException e) {
+                if (e.getStatusCode() == 401) {
+                    return "The username or password you provided was incorrect";
+                }
                 return "Something went wrong, please check your input and try again.";
             }
         }

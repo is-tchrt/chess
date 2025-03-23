@@ -6,11 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static ui.EscapeSequences.SET_TEXT_COLOR_BLACK;
-import static ui.EscapeSequences.SET_TEXT_COLOR_BLUE;
-
 public class PostLoginClient extends Client {
-    private HashMap<Integer, GameData> gameList;
+    private HashMap<Integer, GameData> gameList = new HashMap<>();
 
     public PostLoginClient(ServerFacade serverFacade) {
         super(serverFacade);
@@ -31,26 +28,26 @@ public class PostLoginClient extends Client {
             case "join" -> join(parameters);
             case "observe" -> observe(parameters);
             case "logout" -> logout();
+            case "quit" -> "quit";
             default -> help();
         };
     }
 
     private String help() {
-        return SET_TEXT_COLOR_BLUE + "help" + SET_TEXT_COLOR_BLACK + " - Display possible commands\n" +
-                SET_TEXT_COLOR_BLUE + "create <name>" + SET_TEXT_COLOR_BLACK + " - Create a new game\n" +
-                SET_TEXT_COLOR_BLUE + "list" + SET_TEXT_COLOR_BLACK + " - List all games\n" +
-                SET_TEXT_COLOR_BLUE + "join <id> <WHITE|BLACK>" + SET_TEXT_COLOR_BLACK + " - Join a game as the" +
-                "specified color\n" +
-                SET_TEXT_COLOR_BLUE + "observe <id>" + SET_TEXT_COLOR_BLACK + " - Observe a game\n" +
-                SET_TEXT_COLOR_BLUE + "logout" + SET_TEXT_COLOR_BLACK + " - Logout of your account\n" +
-                SET_TEXT_COLOR_BLUE + "quit" + SET_TEXT_COLOR_BLACK + " - Exit the application";
+        return COMMAND_NAME_COLOR + "help" + COMMAND_DESCRIPTION_COLOR + " - Display possible commands\n" +
+                COMMAND_NAME_COLOR + "create <name>" + COMMAND_DESCRIPTION_COLOR + " - Create a new game\n" +
+                COMMAND_NAME_COLOR + "list" + COMMAND_DESCRIPTION_COLOR + " - List all games\n" +
+                COMMAND_NAME_COLOR + "join <id> <WHITE|BLACK>" + COMMAND_DESCRIPTION_COLOR + " - Join a game as the" +
+                " specified color\n" +
+                COMMAND_NAME_COLOR + "observe <id>" + COMMAND_DESCRIPTION_COLOR + " - Observe a game\n" +
+                COMMAND_NAME_COLOR + "logout" + COMMAND_DESCRIPTION_COLOR + " - Logout of your account\n" +
+                COMMAND_NAME_COLOR + "quit" + COMMAND_DESCRIPTION_COLOR + " - Exit the application";
     }
 
     private String create(String ... params) {
         if (params.length == 1) {
             try {
-                int response = serverFacade.createGame(params[0], authToken);
-                System.out.println("Success!");
+                serverFacade.createGame(params[0], authToken);
                 return "Successfully created a game.";
             } catch (HttpException e) {
                 return "Something went wrong, please check your input and try again.";
@@ -104,8 +101,8 @@ public class PostLoginClient extends Client {
     }
 
     private String addGameListEntry(int index, GameData gameData) {
-        gameList.put(index, gameData);
-        return index + " Name: " + gameData.gameName() + ", White: " + gameData.whiteUsername() + ", Black: " +
+        gameList.put(index + 1, gameData);
+        return (index + 1) + " Name: " + gameData.gameName() + ", White: " + gameData.whiteUsername() + ", Black: " +
                 gameData.blackUsername() + "\n";
     }
 }
