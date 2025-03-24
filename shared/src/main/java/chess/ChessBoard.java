@@ -28,6 +28,10 @@ public class ChessBoard {
         }
     }
 
+    public ChessPiece[][] getBoard() {
+        return board;
+    }
+
     /**
      * Adds a chess piece to the chessboard
      *

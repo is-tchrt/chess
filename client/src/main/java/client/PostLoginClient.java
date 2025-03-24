@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import model.GameData;
 
 import java.util.ArrayList;
@@ -74,6 +75,11 @@ public class PostLoginClient extends Client {
                 serverFacade.joinGame(params[1], selectedGame.gameID(), authToken);
                 System.out.println("You have joined " + selectedGame.gameName());
                 game = selectedGame;
+                if (params[1].equals("WHITE")) {
+                    color = ChessGame.TeamColor.WHITE;
+                } else {
+                    color = ChessGame.TeamColor.BLACK;
+                }
                 return "join";
             } catch (Exception e) {
                 return "Something went wrong, please check your input and try again.";

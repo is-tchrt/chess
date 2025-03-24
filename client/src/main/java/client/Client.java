@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import model.GameData;
 
 import static ui.EscapeSequences.SET_TEXT_COLOR_BLUE;
@@ -10,6 +11,7 @@ public abstract class Client {
     String authToken;
     String username;
     GameData game;
+    ChessGame.TeamColor color;
     protected final String COMMAND_NAME_COLOR = SET_TEXT_COLOR_BLUE;
     protected final String COMMAND_DESCRIPTION_COLOR = SET_TEXT_COLOR_GREEN;
 
@@ -21,6 +23,8 @@ public abstract class Client {
         this.serverFacade = other.serverFacade;
         this.authToken = other.authToken;
         this.username = other.username;
+        this.game = other.game;
+        this.color = other.color;
     }
 
     abstract String eval(String line);

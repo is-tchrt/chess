@@ -25,6 +25,8 @@ public class Repl {
                     client = new PostLoginClient(client);
                 } else if (result.equals("logout")) {
                     client = new PreLoginClient(client);
+                } else if (result.equals("join")) {
+                    client = new GamePlayClient(client);
                 } else if (result.equals("quit")) {
                     break;
                 } else {
