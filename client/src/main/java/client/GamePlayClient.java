@@ -4,8 +4,6 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 
-import java.rmi.server.RMIClassLoader;
-
 import static ui.EscapeSequences.*;
 
 public class GamePlayClient extends Client {
@@ -31,7 +29,6 @@ public class GamePlayClient extends Client {
         StringBuilder printedBoard = new StringBuilder(letters);
         int rowNumber;
         int stepSize;
-        int firstRow;
         if (color.equals(ChessGame.TeamColor.WHITE)) {
             rowNumber = 8;
             stepSize = -1;

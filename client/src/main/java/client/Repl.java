@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Repl {
     private Client client;
-    private ServerFacade serverFacade;
+    private final ServerFacade serverFacade;
 
     public Repl(String url) {
         serverFacade = new ServerFacade(url);

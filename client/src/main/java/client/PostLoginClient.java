@@ -60,7 +60,7 @@ public class PostLoginClient extends Client {
     }
 
     private String list() {
-        ArrayList<GameData> games = new ArrayList<GameData>(serverFacade.listGames(authToken));
+        ArrayList<GameData> games = new ArrayList<>(serverFacade.listGames(authToken));
         String response = "";
         for (int i = 0; i < games.size(); i++) {
             response = response.concat(addGameListEntry(i, games.get(i)));
