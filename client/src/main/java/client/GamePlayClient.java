@@ -4,6 +4,8 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 
+import java.util.Arrays;
+
 import static ui.EscapeSequences.*;
 
 public class GamePlayClient extends Client {
@@ -20,12 +22,18 @@ public class GamePlayClient extends Client {
 
     @Override
     String eval(String line) {
-        return "";
+        String[] arguments = line.split(" ");
+        String command = (arguments.length > 0) ? arguments[0] : "leave";
+        String[] parameters = Arrays.copyOfRange(arguments, 1, arguments.length);
+        return switch (command) {
+            case "leave" -> "leave";
+            case "quit" -> "quit";
+            default -> "leave";
+        };
     }
 
     String printBoard(ChessBoard board) {
-        String letters = SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_BLACK + "    " + "a" + "  " + "b" + "  " + "c" + "  "
-                + "d" + "  " + "e" + "  " + "f" + "  " + "g" + "  " + "h" + "    " + SET_BG_COLOR_BLACK + "\n";
+        String letters = getLetters();
         StringBuilder printedBoard = new StringBuilder(letters);
         int rowNumber;
         int stepSize;
@@ -36,26 +44,40 @@ public class GamePlayClient extends Client {
             rowNumber = 1;
             stepSize = 1;
         }
+        boolean isEvenRow = true;
         for (int i = rowNumber - 1; (i < 8 && i >= 0); i += stepSize) {
-            printedBoard.append(printBoardRow(board.getBoard()[i], rowNumber));
+            printedBoard.append(printBoardRow(board.getBoard()[i], rowNumber, isEvenRow ? SET_BG_COLOR_WHITE :
+                    SET_BG_COLOR_MAGENTA, isEvenRow ? SET_BG_COLOR_MAGENTA : SET_BG_COLOR_WHITE));
             rowNumber += stepSize;
+            isEvenRow = !isEvenRow;
         }
         printedBoard.append(letters);
+        printedBoard.append(RESET_TEXT_COLOR);
         System.out.print(printedBoard.toString());
         return printedBoard.toString();
     }
 
-    String printBoardRow(ChessPiece[] row, int rowNumber) {
-        String firstColor = rowNumber % 2 == 0 ? SET_BG_COLOR_MAGENTA : SET_BG_COLOR_WHITE;
-        String lastColor = rowNumber % 2 == 0 ? SET_BG_COLOR_WHITE : SET_BG_COLOR_MAGENTA;
+    String printBoardRow(ChessPiece[] row, int rowNumber, String firstColor, String lastColor) {
+//        String firstColor = rowNumber % 2 == 0 ? SET_BG_COLOR_MAGENTA : SET_BG_COLOR_WHITE;
+//        String lastColor = rowNumber % 2 == 0 ? SET_BG_COLOR_WHITE : SET_BG_COLOR_MAGENTA;
         StringBuilder printedRow = new StringBuilder(SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_BLACK + " " + rowNumber +
                 " ");
         boolean colorSwitch = true;
-        for (ChessPiece piece : row) {
+        int columnNumber;
+        int stepSize;
+        if (color.equals(ChessGame.TeamColor.WHITE)) {
+            columnNumber = 1;
+            stepSize = 1;
+        } else {
+            columnNumber = 8;
+            stepSize = -1;
+        }
+        for (int i = columnNumber - 1; i < 8 && i >= 0; i += stepSize) {
+            ChessPiece piece = row[i];
             printedRow.append(printBoardSquare(piece, colorSwitch ? firstColor : lastColor));
             colorSwitch = !colorSwitch;
         }
-        printedRow.append(SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_BLACK + " " + rowNumber + " " + SET_BG_COLOR_BLACK +
+        printedRow.append(SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_BLACK + " " + rowNumber + " " + RESET_BG_COLOR +
                 "\n");
         return printedRow.toString();
     }
@@ -80,7 +102,14 @@ public class GamePlayClient extends Client {
                 case ChessPiece.PieceType.PAWN -> BLACK_PAWN;
             };
         }
-        System.out.println(pieceColor + BLACK_BISHOP);
         return squareColor + pieceColor + pieceCharacter;
+    }
+
+    String getLetters() {
+        String whiteLetters = SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_BLACK + "    " + "a" + "  " + "b" + "  " + "c" + "  "
+                + "d" + "  " + "e" + "  " + "f" + "  " + "g" + "  " + "h" + "    " + RESET_BG_COLOR + "\n";
+        String blackLetters = SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_BLACK + "    " + "h" + "  " + "g" + "  " + "f" + "  "
+                + "e" + "  " + "e" + "  " + "c" + "  " + "b" + "  " + "a" + "    " + RESET_BG_COLOR + "\n";
+        return color.equals(ChessGame.TeamColor.WHITE) ? whiteLetters : blackLetters;
     }
 }

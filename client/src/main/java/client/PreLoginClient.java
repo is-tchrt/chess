@@ -69,6 +69,8 @@ public class PreLoginClient extends Client {
                     return "The username or password you provided was incorrect";
                 }
                 return "Something went wrong, please check your input and try again.";
+            } catch (Exception e) {
+                return "Something went wrong, please check your input and try again.";
             }
         }
         else {

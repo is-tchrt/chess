@@ -8,8 +8,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class PostLoginClient extends Client {
-    private HashMap<Integer, GameData> gameList = new HashMap<>();
-
     public PostLoginClient(ServerFacade serverFacade) {
         super(serverFacade);
     }
@@ -50,7 +48,7 @@ public class PostLoginClient extends Client {
             try {
                 serverFacade.createGame(params[0], authToken);
                 return "Successfully created a game.";
-            } catch (HttpException e) {
+            } catch (Exception e) {
                 return "Something went wrong, please check your input and try again.";
             }
         }
@@ -71,18 +69,28 @@ public class PostLoginClient extends Client {
     private String join(String ... params) {
         if (params.length == 2) {
             try {
+                if (!params[1].equals("WHITE") && !(params[1].equals("BLACK"))) {
+                    return "You must specify either WHITE or BLACK. The requested color must be typed in all caps.";
+                }
                 GameData selectedGame = gameList.get(Integer.parseInt(params[0]));
                 serverFacade.joinGame(params[1], selectedGame.gameID(), authToken);
                 System.out.println("You have joined " + selectedGame.gameName());
                 game = selectedGame;
                 if (params[1].equals("WHITE")) {
                     color = ChessGame.TeamColor.WHITE;
-                } else {
+                } else if (params[1].equals("BLACK")) {
                     color = ChessGame.TeamColor.BLACK;
                 }
                 return "join";
+            } catch (NumberFormatException e) {
+                return "Please specify the game you want to join using it's number in the list. Use the digit, don't type" +
+                        " out the number (e.g. 'join 1 WHITE' not 'observe 1 WHITE')";
             } catch (Exception e) {
-                return "Something went wrong, please check your input and try again.";
+                return switch (e.getMessage()) {
+                    case "Error: unauthorized" -> "quit";
+                    case "Error: already taken" -> "That color is already taken. Please try again.";
+                    default -> "Something went wrong, please check your input and try again.";
+                };
             }
         }
         else {
@@ -93,7 +101,16 @@ public class PostLoginClient extends Client {
 
     private String observe(String ... params) {
         if (params.length == 1) {
-            return "observe";
+            try {
+                game = gameList.get(Integer.parseInt(params[0]));
+                color = ChessGame.TeamColor.WHITE;
+                return "observe";
+            } catch (NumberFormatException e) {
+                return "Please specify the game you want to join using it's number in the list. Use the digit, don't type" +
+                        " out the number (e.g. 'observe 1' not 'observe one')";
+            } catch (Exception e) {
+                return "Something went wrong, please check your input and try again.";
+            }
         }
         else {
             return "The observe command takes one argument, the ID of the game you want to observe. Please try again.";
