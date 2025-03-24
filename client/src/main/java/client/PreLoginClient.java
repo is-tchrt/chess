@@ -1,6 +1,6 @@
 package client;
 
-import DataTypes.LoginResponse;
+import types.LoginResponse;
 import model.UserData;
 
 import java.util.Arrays;

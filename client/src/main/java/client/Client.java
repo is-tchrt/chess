@@ -12,8 +12,8 @@ public abstract class Client {
     String username;
     GameData game;
     ChessGame.TeamColor color;
-    protected final String COMMAND_NAME_COLOR = SET_TEXT_COLOR_BLUE;
-    protected final String COMMAND_DESCRIPTION_COLOR = SET_TEXT_COLOR_GREEN;
+    protected final static String COMMAND_NAME_COLOR = SET_TEXT_COLOR_BLUE;
+    protected final static String COMMAND_DESCRIPTION_COLOR = SET_TEXT_COLOR_GREEN;
 
     public Client(ServerFacade serverFacade) {
         this.serverFacade = serverFacade;

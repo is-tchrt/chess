@@ -1,6 +1,6 @@
 package client;
 
-import DataTypes.LoginResponse;
+import types.LoginResponse;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.*;

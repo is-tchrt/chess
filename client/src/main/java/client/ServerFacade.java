@@ -1,6 +1,6 @@
 package client;
 
-import DataTypes.*;
+import types.*;
 import com.google.gson.Gson;
 import model.GameData;
 import model.UserData;
