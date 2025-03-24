@@ -26,7 +26,7 @@ public class GamePlayClient extends Client {
     }
 
     String printBoard(ChessBoard board) {
-        String letters = SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "    " + "a" + "  " + "b" + "  " + "c" + "  "
+        String letters = SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_BLACK + "    " + "a" + "  " + "b" + "  " + "c" + "  "
                 + "d" + "  " + "e" + "  " + "f" + "  " + "g" + "  " + "h" + "    " + SET_BG_COLOR_BLACK + "\n";
         StringBuilder printedBoard = new StringBuilder(letters);
         int rowNumber;
@@ -51,14 +51,14 @@ public class GamePlayClient extends Client {
     String printBoardRow(ChessPiece[] row, int rowNumber) {
         String firstColor = rowNumber % 2 == 0 ? SET_BG_COLOR_MAGENTA : SET_BG_COLOR_WHITE;
         String lastColor = rowNumber % 2 == 0 ? SET_BG_COLOR_WHITE : SET_BG_COLOR_MAGENTA;
-        StringBuilder printedRow = new StringBuilder(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + " " + rowNumber +
+        StringBuilder printedRow = new StringBuilder(SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_BLACK + " " + rowNumber +
                 " ");
         boolean colorSwitch = true;
         for (ChessPiece piece : row) {
             printedRow.append(printBoardSquare(piece, colorSwitch ? firstColor : lastColor));
             colorSwitch = !colorSwitch;
         }
-        printedRow.append(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + " " + rowNumber + " " + SET_BG_COLOR_BLACK +
+        printedRow.append(SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_BLACK + " " + rowNumber + " " + SET_BG_COLOR_BLACK +
                 "\n");
         return printedRow.toString();
     }
@@ -70,9 +70,9 @@ public class GamePlayClient extends Client {
             pieceCharacter = EMPTY;
         } else {
             if (piece.getTeamColor().equals(ChessGame.TeamColor.WHITE)) {
-                pieceColor = SET_TEXT_COLOR_GREEN;
-            } else {
                 pieceColor = SET_TEXT_COLOR_BLUE;
+            } else {
+                pieceColor = SET_TEXT_COLOR_BLACK;
             }
             pieceCharacter = switch (piece.getPieceType()) {
                 case ChessPiece.PieceType.KING -> BLACK_KING;
