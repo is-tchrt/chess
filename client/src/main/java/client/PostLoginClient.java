@@ -103,6 +103,9 @@ public class PostLoginClient extends Client {
             try {
                 game = gameList.get(Integer.parseInt(params[0]));
                 color = ChessGame.TeamColor.WHITE;
+                if (game == null) {
+                    return "This game does not exist";
+                }
                 return "observe";
             } catch (NumberFormatException e) {
                 return "Please specify the game you want to join using it's number in the list. Use the digit, don't type" +
