@@ -15,11 +15,18 @@ import java.io.IOException;
 
 @WebSocket
 public class WebSocketHandler {
-    AuthDao authDao = new MySqlAuthDao();
-    GameDao gameDao = new MySqlGameDao();
-    ClientsManager clients = new ClientsManager();
+    AuthDao authDao;
+    GameDao gameDao;
+    ClientsManager clients;
 
-    public WebSocketHandler() throws DataAccessException {
+    public WebSocketHandler() {
+        try {
+            authDao = new MySqlAuthDao();
+            gameDao = new MySqlGameDao();
+            clients = new ClientsManager();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @OnWebSocketMessage
