@@ -1,18 +1,22 @@
 package websocket;
 
 import com.google.gson.Gson;
-import dataaccess.AuthDao;
-import dataaccess.DataAccessException;
-import dataaccess.MySqlAuthDao;
+import dataaccess.*;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
+import websocket.messages.ErrorServerMessage;
+import websocket.messages.ServerMessage;
+
+import java.io.IOException;
 
 @WebSocket
 public class WebSocketHandler {
     AuthDao authDao = new MySqlAuthDao();
+    GameDao gameDao = new MySqlGameDao();
     ClientsManager clients = new ClientsManager();
 
     public WebSocketHandler() throws DataAccessException {
@@ -21,20 +25,30 @@ public class WebSocketHandler {
     @OnWebSocketMessage
     public void onMessage(Session session, String message) {
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
-        switch (command.getCommandType()) {
-            case CONNECT -> connect(command, session);
-            case MAKE_MOVE -> makeMove(new Gson().fromJson(message, MakeMoveCommand.class));
-            case LEAVE -> leave(command);
-            case RESIGN -> resign(command);
+        try {
+            switch (command.getCommandType()) {
+                case CONNECT -> connect(command, session);
+                case MAKE_MOVE -> makeMove(new Gson().fromJson(message, MakeMoveCommand.class));
+                case LEAVE -> leave(command);
+                case RESIGN -> resign(command);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
-    private void connect(UserGameCommand command, Session session) {
+    private void connect(UserGameCommand command, Session session) throws IOException {
         try {
             String username = getUsernameFromCommand(command);
-            clients.add(command.getGameID(), username, session);
+            Client client = new Client(username, session);
+            clients.add(command.getGameID(), client);
+            GameData gameData = gameDao.getGame(command.getGameID());
+            client.sendLoadGame(gameData.game());
+            String playerStatus = getPlayerStatusFromCommand(command, username);
+            clients.notifyOtherClients(command.getGameID(), client, username + " has joined the game as " + playerStatus + ".");
         } catch (DataAccessException e) {
-            throw new RuntimeException(e);
+            ErrorServerMessage error = new ErrorServerMessage(ServerMessage.ServerMessageType.ERROR, "Error: " + e.getMessage());
+            session.getRemote().sendString(new Gson().toJson(error));
         }
     }
 
@@ -53,5 +67,16 @@ public class WebSocketHandler {
     private String getUsernameFromCommand(UserGameCommand command) throws DataAccessException {
         String authToken = command.getAuthToken();
         return authDao.getAuthData(authToken).username();
+    }
+
+    private String getPlayerStatusFromCommand(UserGameCommand command, String username) throws DataAccessException {
+        GameData gameData = gameDao.getGame(command.getGameID());
+        if (gameData.blackUsername().equals(username)) {
+            return "black";
+        } else if (gameData.whiteUsername().equals(username)) {
+            return "white";
+        } else {
+            return "an observer";
+        }
     }
 }
