@@ -41,10 +41,10 @@ public class WebSocketClient {
     }
 
     private void notification(NotificationServerMessage serverMessage) {
-        throw new RuntimeException("Not implemented");
+        gamePlayClient.printNotification(serverMessage.message);
     }
 
     private void error(ErrorServerMessage serverMessage) {
-        throw new RuntimeException("Not implemented");
+        gamePlayClient.printNotification(serverMessage.errorMessage);
     }
 }
