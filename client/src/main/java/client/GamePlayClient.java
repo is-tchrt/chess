@@ -3,6 +3,7 @@ package client;
 import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
+import model.GameData;
 
 import java.util.Arrays;
 
@@ -18,7 +19,8 @@ public class GamePlayClient extends Client {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        printBoard(new ChessGame().getBoard());
+        setGame(new GameData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), new ChessGame()));
+        printBoard();
     }
 
     public GamePlayClient(Client other) {
@@ -28,7 +30,7 @@ public class GamePlayClient extends Client {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        printBoard(new ChessGame().getBoard());
+        printBoard();
     }
 
     @Override
@@ -37,17 +39,54 @@ public class GamePlayClient extends Client {
         String command = (arguments.length > 0) ? arguments[0] : "leave";
         String[] parameters = Arrays.copyOfRange(arguments, 1, arguments.length);
         return switch (command) {
-            case "leave" -> "leave";
-            case "quit" -> "quit";
-            default -> "leave";
+            case "redraw" -> redraw();
+            case "leave" -> leave();
+            case "move" -> move();
+            case "resign" -> resign();
+            case "highlight" -> highlight();
+            default -> help();
         };
+    }
+
+    public String help() {
+        return COMMAND_NAME_COLOR + "help" + COMMAND_DESCRIPTION_COLOR + " - Display possible commands\n" +
+                COMMAND_NAME_COLOR + "redraw" + COMMAND_DESCRIPTION_COLOR + " - Redraw the board\n" +
+                COMMAND_NAME_COLOR + "leave" + COMMAND_DESCRIPTION_COLOR + " - Leave the game\n" +
+                COMMAND_NAME_COLOR + "move <id> <WHITE|BLACK>" + COMMAND_DESCRIPTION_COLOR + " - make the specified move" +
+                " (Players only)" +
+                COMMAND_NAME_COLOR + "resign" + COMMAND_DESCRIPTION_COLOR + " - Resign the game (Players only)\n" +
+                COMMAND_NAME_COLOR + "highlight <piece>" + COMMAND_DESCRIPTION_COLOR + " - Highlight moves for the given piece";
+    }
+
+    public String redraw() {
+        return getBoardString(game.game().getBoard());
+    }
+
+    public String leave() {
+        throw new RuntimeException("Not implemented");
+    }
+
+    public String move() {
+        throw new RuntimeException("Not implemented");
+    }
+
+    public String resign() {
+        throw new RuntimeException("Not implemented");
+    }
+
+    public String highlight() {
+        throw new RuntimeException("Not implemented");
     }
 
     public void printNotification(String message) {
         System.out.println(message);
     }
 
-    public String printBoard(ChessBoard board) {
+    public void printBoard() {
+        System.out.println(getBoardString(game.game().getBoard()));
+    }
+
+    public String getBoardString(ChessBoard board) {
         String letters = getLetters();
         StringBuilder printedBoard = new StringBuilder(letters);
         int rowNumber;

@@ -42,7 +42,7 @@ public class WebSocketClient {
         GameData newGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(),
                 gameData.gameName(), serverMessage.game);
         gamePlayClient.setGame(newGameData);
-        gamePlayClient.printBoard(serverMessage.game.getBoard());
+        gamePlayClient.printBoard();
     }
 
     private void notification(NotificationServerMessage serverMessage) {
