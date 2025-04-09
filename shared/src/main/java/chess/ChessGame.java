@@ -14,6 +14,7 @@ public class ChessGame {
 
     TeamColor teamTurn;
     ChessBoard board;
+    boolean inProgress = true;
 
     @Override
     public boolean equals(Object o) {
@@ -55,6 +56,10 @@ public class ChessGame {
     public void setTeamTurn(TeamColor team) {
         teamTurn = team;
     }
+
+    public boolean getInProgress() {return inProgress;}
+
+    public void setInProgress(boolean inProgress) {this.inProgress = inProgress;}
 
     /**
      * Enum identifying the 2 possible teams in a chess game

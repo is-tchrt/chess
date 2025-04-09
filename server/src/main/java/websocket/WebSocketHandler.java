@@ -97,8 +97,21 @@ public class WebSocketHandler {
         }
     }
 
-    private void resign(UserGameCommand command, Client client) {
-        throw new RuntimeException("Not implemented");
+    private void resign(UserGameCommand command, Client client) throws IOException {
+        try {
+            if (getPlayerColorFromCommand(command, client.username) == null) {
+                throw new Exception("Non-players cannot resign.");
+            }
+            GameData gameData = getGameData(command.getGameID());
+            if (!gameData.game().getInProgress()) {
+                throw new Exception("This game has already ended.");
+            }
+            gameData.game().setInProgress(false);
+            gameDao.updateGame(gameData);
+            clients.notifyAllClients(command.getGameID(), client.username + " has resigned.");
+        } catch (Exception e) {
+            client.sendError("Error: " + e.getMessage());
+        }
     }
 
     private String getUsernameFromCommand(UserGameCommand command, Session session) throws Exception {
@@ -150,6 +163,9 @@ public class WebSocketHandler {
             ChessGame.TeamColor color = getPlayerColorFromCommand(command, client.username);
             ChessGame game = getGameData(command.getGameID()).game();
             ChessGame.TeamColor moveColor = game.getBoard().getPiece(command.getMove().getStartPosition()).getTeamColor();
+            if (!game.getInProgress()) {
+                throw new Exception("This game has already ended.");
+            }
             if (!moveColor.equals(color)) {
                 throw new Exception("Piece is wrong color");
             }
