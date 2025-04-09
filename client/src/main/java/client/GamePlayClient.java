@@ -9,14 +9,25 @@ import java.util.Arrays;
 import static ui.EscapeSequences.*;
 
 public class GamePlayClient extends Client {
+    private final WebSocketClient webSocketClient;
 
     public GamePlayClient(ServerFacade serverFacade) {
         super(serverFacade);
+        try {
+            webSocketClient = new WebSocketClient(serverFacade.getServerUrl(), this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         printBoard(new ChessGame().getBoard());
     }
 
     public GamePlayClient(Client other) {
         super(other);
+        try {
+            webSocketClient = new WebSocketClient(serverFacade.getServerUrl(), this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         printBoard(new ChessGame().getBoard());
     }
 
@@ -32,7 +43,11 @@ public class GamePlayClient extends Client {
         };
     }
 
-    String printBoard(ChessBoard board) {
+    public void printNotification(String message) {
+        System.out.println(message);
+    }
+
+    public String printBoard(ChessBoard board) {
         String letters = getLetters();
         StringBuilder printedBoard = new StringBuilder(letters);
         int rowNumber;

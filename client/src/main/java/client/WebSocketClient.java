@@ -15,8 +15,10 @@ import java.net.URI;
 
 public class WebSocketClient {
     private Session session;
+    private GamePlayClient gamePlayClient;
 
-    public WebSocketClient(String url) throws Exception {
+    public WebSocketClient(String url, GamePlayClient gamePlayClient) throws Exception {
+        this.gamePlayClient = gamePlayClient;
         URI uri = new URI(url.replace("http", "ws"));
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
@@ -35,7 +37,7 @@ public class WebSocketClient {
     }
 
     private void load_game(LoadServerMessage serverMessage) {
-        throw new RuntimeException("Not implemented");
+        gamePlayClient.printBoard(serverMessage.game.getBoard());
     }
 
     private void notification(NotificationServerMessage serverMessage) {
