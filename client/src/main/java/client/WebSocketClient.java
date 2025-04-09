@@ -2,6 +2,7 @@ package client;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import model.GameData;
 import websocket.messages.ErrorServerMessage;
 import websocket.messages.LoadServerMessage;
 import websocket.messages.NotificationServerMessage;
@@ -37,6 +38,10 @@ public class WebSocketClient {
     }
 
     private void load_game(LoadServerMessage serverMessage) {
+        GameData gameData = gamePlayClient.game;
+        GameData newGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(),
+                gameData.gameName(), serverMessage.game);
+        gamePlayClient.setGame(newGameData);
         gamePlayClient.printBoard(serverMessage.game.getBoard());
     }
 
