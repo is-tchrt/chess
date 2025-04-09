@@ -3,6 +3,7 @@ package client;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
+import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorServerMessage;
 import websocket.messages.LoadServerMessage;
 import websocket.messages.NotificationServerMessage;
@@ -20,7 +21,7 @@ public class WebSocketClient {
 
     public WebSocketClient(String url, GamePlayClient gamePlayClient) throws Exception {
         this.gamePlayClient = gamePlayClient;
-        URI uri = new URI(url.replace("http", "ws"));
+        URI uri = new URI(url.replace("http", "ws") + "/ws");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
 
@@ -35,6 +36,16 @@ public class WebSocketClient {
                 }
             }
         });
+    }
+
+    public void sendLeave() {
+        try {
+            UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, gamePlayClient.authToken,
+                    gamePlayClient.game.gameID());
+            session.getBasicRemote().sendText(new Gson().toJson(command));
+        } catch (Exception e) {
+            gamePlayClient.printNotification("Error: " + e.getMessage());
+        }
     }
 
     private void load_game(LoadServerMessage serverMessage) {

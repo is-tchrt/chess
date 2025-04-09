@@ -4,7 +4,6 @@ import chess.ChessGame;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.*;
-import http.result.BlankResult;
 import model.AuthData;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
@@ -16,7 +15,6 @@ import websocket.messages.ErrorServerMessage;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
-import java.lang.ref.Cleaner;
 
 @WebSocket
 public class WebSocketHandler {

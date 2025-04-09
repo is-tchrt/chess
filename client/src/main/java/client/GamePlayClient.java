@@ -63,7 +63,8 @@ public class GamePlayClient extends Client {
     }
 
     public String leave() {
-        throw new RuntimeException("Not implemented");
+        webSocketClient.sendLeave();
+        return "leave";
     }
 
     public String move() {
