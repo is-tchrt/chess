@@ -48,6 +48,16 @@ public class WebSocketClient {
         }
     }
 
+    public void sendResign() {
+        try {
+            UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.RESIGN, gamePlayClient.authToken,
+                    gamePlayClient.game.gameID());
+            session.getBasicRemote().sendText(new Gson().toJson(command));
+        } catch (Exception e) {
+            gamePlayClient.printNotification("Error: " + e.getMessage());
+        }
+    }
+
     private void load_game(LoadServerMessage serverMessage) {
         GameData gameData = gamePlayClient.game;
         GameData newGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(),

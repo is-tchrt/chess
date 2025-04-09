@@ -72,7 +72,8 @@ public class GamePlayClient extends Client {
     }
 
     public String resign() {
-        throw new RuntimeException("Not implemented");
+        webSocketClient.sendResign();
+        return "You have resigned.";
     }
 
     public String highlight() {
