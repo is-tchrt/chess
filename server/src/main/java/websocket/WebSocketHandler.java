@@ -78,8 +78,23 @@ public class WebSocketHandler {
         }
     }
 
-    private void leave(UserGameCommand command, Client client) {
-        throw new RuntimeException("Not implemented");
+    private void leave(UserGameCommand command, Client client) throws IOException {
+        try {
+            GameData gameData = getGameData(command.getGameID());
+            GameData newGameData;
+            if (gameData.blackUsername() != null && gameData.blackUsername().equals(client.username)) {
+                newGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), null, gameData.gameName(), gameData.game());
+            } else if (gameData.whiteUsername() != null && gameData.whiteUsername().equals(client.username)) {
+                newGameData = new GameData(gameData.gameID(), null, gameData.blackUsername(), gameData.gameName(), gameData.game());
+            } else {
+                newGameData = gameData;
+            }
+            gameDao.updateGame(newGameData);
+            clients.notifyOtherClients(command.getGameID(), client, client.username + " has left the game.");
+            clients.remove(command.getGameID(), client.username);
+        } catch (Exception e) {
+            client.sendError("Error: " + e.getMessage());
+        }
     }
 
     private void resign(UserGameCommand command, Client client) {
