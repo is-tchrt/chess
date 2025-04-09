@@ -1,5 +1,7 @@
 package websocket;
 
+import chess.ChessGame;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.ArrayList;
@@ -30,6 +32,26 @@ public class ClientsManager {
                 if (!client.equals(currentClient)) {
                     client.sendNotification(message);
                 }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void notifyAllClients(Integer gameID, String message) {
+        try {
+            for (Client client : clients.get(gameID).values()) {
+                client.sendNotification(message);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void allClientsLoadGame(Integer gameID, ChessGame game) {
+        try {
+            for (Client client : clients.get(gameID).values()) {
+                client.sendLoadGame(game);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());

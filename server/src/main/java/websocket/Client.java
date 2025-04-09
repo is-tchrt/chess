@@ -3,6 +3,7 @@ package websocket;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
+import websocket.messages.ErrorServerMessage;
 import websocket.messages.LoadServerMessage;
 import websocket.messages.NotificationServerMessage;
 import websocket.messages.ServerMessage;
@@ -26,6 +27,11 @@ public class Client {
 
     public void sendNotification(String message) throws IOException {
         NotificationServerMessage serverMessage = new NotificationServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
+        session.getRemote().sendString(new Gson().toJson(serverMessage));
+    }
+
+    public void sendError(String message) throws IOException {
+        ErrorServerMessage serverMessage = new ErrorServerMessage(ServerMessage.ServerMessageType.ERROR, message);
         session.getRemote().sendString(new Gson().toJson(serverMessage));
     }
 
