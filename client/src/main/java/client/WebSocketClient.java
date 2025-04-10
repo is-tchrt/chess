@@ -1,6 +1,5 @@
 package client;
 
-import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
 import model.GameData;
@@ -15,8 +14,8 @@ import javax.websocket.*;
 import java.net.URI;
 
 public class WebSocketClient extends Endpoint {
-    private Session session;
-    private GamePlayClient gamePlayClient;
+    private final Session session;
+    private final GamePlayClient gamePlayClient;
 
     public WebSocketClient(String url, GamePlayClient gamePlayClient) throws Exception {
         this.gamePlayClient = gamePlayClient;

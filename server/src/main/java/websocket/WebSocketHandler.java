@@ -1,7 +1,6 @@
 package websocket;
 
 import chess.ChessGame;
-import chess.ChessMove;
 import chess.ChessPosition;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
@@ -71,7 +70,7 @@ public class WebSocketHandler {
             clients.allClientsLoadGame(command.getGameID(), gameData.game());
             clients.notifyOtherClients(command.getGameID(), client, client.username + " moved " + makePositionHumanReadable(command.getMove().getStartPosition()) +
                     " to " + makePositionHumanReadable(command.getMove().getEndPosition()) + ".");
-            sendCheckStatus(command.getGameID(), gameData.game(), getPlayerColorFromCommand(command, client.username), client);
+            sendCheckStatus(command.getGameID(), gameData.game(), getPlayerColorFromCommand(command, client.username));
         } catch (InvalidMoveException e) {
             client.sendError("Error: Invalid move");
         } catch (Exception e) {
@@ -174,7 +173,7 @@ public class WebSocketHandler {
             }
     }
 
-    private void sendCheckStatus(Integer gameID, ChessGame game, ChessGame.TeamColor color, Client client) throws DataAccessException {
+    private void sendCheckStatus(Integer gameID, ChessGame game, ChessGame.TeamColor color) throws DataAccessException {
         ChessGame.TeamColor otherColor;
         if (color == null) {
             return;

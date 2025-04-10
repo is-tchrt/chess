@@ -20,7 +20,6 @@ public class GamePlayClient extends Client {
         }
         setGame(new GameData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), new ChessGame()));
         System.out.println(playing);
-//        printBoard();
     }
 
     public GamePlayClient(Client other) {
@@ -31,7 +30,6 @@ public class GamePlayClient extends Client {
             throw new RuntimeException(e);
         }
         System.out.println(playing);
-//        printBoard();
     }
 
     @Override
@@ -151,13 +149,11 @@ public class GamePlayClient extends Client {
         }
         printedBoard.append(letters);
         printedBoard.append(RESET_TEXT_COLOR);
-        return "\n" + printedBoard.toString();
+        return "\n" + printedBoard;
     }
 
     String printBoardRow(ChessPiece[] row, int rowNumber, String firstColor, String lastColor, ChessPosition selectedPosition,
                          Set<ChessPosition> validMoves) {
-//        String firstColor = rowNumber % 2 == 0 ? SET_BG_COLOR_MAGENTA : SET_BG_COLOR_WHITE;
-//        String lastColor = rowNumber % 2 == 0 ? SET_BG_COLOR_WHITE : SET_BG_COLOR_MAGENTA;
         StringBuilder printedRow = new StringBuilder(SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_BLACK + " " + rowNumber +
                 " ");
         boolean colorSwitch = true;
