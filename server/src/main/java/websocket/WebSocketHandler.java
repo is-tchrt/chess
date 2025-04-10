@@ -68,8 +68,9 @@ public class WebSocketHandler {
             gameData.game().makeMove(command.getMove());
             gameDao.updateGame(gameData);
             clients.allClientsLoadGame(command.getGameID(), gameData.game());
-            clients.notifyOtherClients(command.getGameID(), client, client.username + " moved " + makePositionHumanReadable(command.getMove().getStartPosition()) +
-                    " to " + makePositionHumanReadable(command.getMove().getEndPosition()) + ".");
+            clients.notifyOtherClients(command.getGameID(), client, client.username + " moved " +
+                    makePositionHumanReadable(command.getMove().getStartPosition()) + " to " +
+                    makePositionHumanReadable(command.getMove().getEndPosition()) + ".");
             sendCheckStatus(command.getGameID(), gameData.game(), getPlayerColorFromCommand(command, client.username));
         } catch (InvalidMoveException e) {
             client.sendError("Error: Invalid move");

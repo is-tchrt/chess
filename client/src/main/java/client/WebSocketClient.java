@@ -29,7 +29,7 @@ public class WebSocketClient extends Endpoint {
             public void onMessage(String message) {
                 ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
                 switch (serverMessage.getServerMessageType()) {
-                    case LOAD_GAME -> load_game(new Gson().fromJson(message, LoadServerMessage.class));
+                    case LOAD_GAME -> loadGame(new Gson().fromJson(message, LoadServerMessage.class));
                     case NOTIFICATION -> notification(new Gson().fromJson(message, NotificationServerMessage.class));
                     case ERROR -> error(new Gson().fromJson(message, ErrorServerMessage.class));
                 }
@@ -61,7 +61,7 @@ public class WebSocketClient extends Endpoint {
         }
     }
 
-    private void load_game(LoadServerMessage serverMessage) {
+    private void loadGame(LoadServerMessage serverMessage) {
         GameData gameData = gamePlayClient.game;
         GameData newGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(),
                 gameData.gameName(), serverMessage.game);
