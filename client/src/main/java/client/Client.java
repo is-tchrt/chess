@@ -12,6 +12,7 @@ public abstract class Client {
     ServerFacade serverFacade;
     String authToken;
     String username;
+    boolean playing;
     protected HashMap<Integer, GameData> gameList = new HashMap<>();
 
     public GameData getGame() {
@@ -29,6 +30,7 @@ public abstract class Client {
 
     public Client(ServerFacade serverFacade) {
         this.serverFacade = serverFacade;
+        this.playing = false;
     }
 
     public Client(Client other) {
@@ -37,6 +39,7 @@ public abstract class Client {
         this.username = other.username;
         this.game = other.game;
         this.color = other.color;
+        this.playing = other.playing;
     }
 
     abstract String eval(String line);

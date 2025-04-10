@@ -19,6 +19,7 @@ public class GamePlayClient extends Client {
             throw new RuntimeException(e);
         }
         setGame(new GameData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), new ChessGame()));
+        System.out.println(playing);
 //        printBoard();
     }
 
@@ -29,6 +30,7 @@ public class GamePlayClient extends Client {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        System.out.println(playing);
 //        printBoard();
     }
 
@@ -53,7 +55,7 @@ public class GamePlayClient extends Client {
                 COMMAND_NAME_COLOR + "leave" + COMMAND_DESCRIPTION_COLOR + " - Leave the game\n" +
                 COMMAND_NAME_COLOR + "move <start position> <end position> <promotion type>" + COMMAND_DESCRIPTION_COLOR + " - make the" +
                 " specified move (Players only). Specify the positions using a letter for the column and a number for the" +
-                " row, e.g. a2 a4. If the move will result in a pawn promotion specify the desired type in all lowercase.\n" +
+                " row, e.g. a2 a4. If the move will result in a pawn promotion specify the desired piece type (e.g. queen).\n" +
                 COMMAND_NAME_COLOR + "resign" + COMMAND_DESCRIPTION_COLOR + " - Resign the game (Players only)\n" +
                 COMMAND_NAME_COLOR + "highlight <position>" + COMMAND_DESCRIPTION_COLOR + " - Highlight moves for the piece" +
                 " at the given position. Specify the position using a letter for the column and a number for the row, e.g. e1."
@@ -73,6 +75,8 @@ public class GamePlayClient extends Client {
         if (params.length < 2 || params.length > 3) {
             return "The move command takes two or three arguments, the current position of the piece you want to move and" +
                     " the position you want to move it to, and optionally the type a pawn will be promoted to. Please try again.";
+        } else if (!game.game().getInProgress()) {
+            return "This game has ended.";
         }
         ChessPosition startPosition = parsePositionParameter(params[0]);
         ChessPosition endPosition = parsePositionParameter(params[1]);
@@ -91,8 +95,12 @@ public class GamePlayClient extends Client {
     }
 
     public String resign() {
-        webSocketClient.sendUserCommand(UserGameCommand.CommandType.RESIGN);
-        return "You have resigned.";
+        if (playing) {
+            webSocketClient.sendUserCommand(UserGameCommand.CommandType.RESIGN);
+            return "";
+        } else {
+            return "Only players can resign.";
+        }
     }
 
     public String highlight(String ... params) {
@@ -143,8 +151,7 @@ public class GamePlayClient extends Client {
         }
         printedBoard.append(letters);
         printedBoard.append(RESET_TEXT_COLOR);
-        System.out.print(printedBoard.toString());
-        return printedBoard.toString();
+        return "\n" + printedBoard.toString();
     }
 
     String printBoardRow(ChessPiece[] row, int rowNumber, String firstColor, String lastColor, ChessPosition selectedPosition,
@@ -167,7 +174,7 @@ public class GamePlayClient extends Client {
             ChessPiece piece = row[i];
             String squareColor;
             ChessPosition currentSquare = new ChessPosition(rowNumber, i + 1);
-            if (validMoves.contains(currentSquare)) {
+            if (validMoves != null && validMoves.contains(currentSquare)) {
                 squareColor = SET_BG_COLOR_GREEN;
             } else if (currentSquare.equals(selectedPosition)) {
                 squareColor = SET_BG_COLOR_RED;
@@ -245,12 +252,10 @@ public class GamePlayClient extends Client {
     }
 
     ChessPiece.PieceType getPromotionPiece(String type) {
-        return switch (type) {
-            case "queen" -> ChessPiece.PieceType.QUEEN;
-            case "rook" -> ChessPiece.PieceType.ROOK;
-            case "bishop" -> ChessPiece.PieceType.BISHOP;
-            case "knight" -> ChessPiece.PieceType.KNIGHT;
-            default -> null;
-        };
+        try {
+            return ChessPiece.PieceType.valueOf(type.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }

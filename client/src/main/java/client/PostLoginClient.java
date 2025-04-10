@@ -82,6 +82,7 @@ public class PostLoginClient extends Client {
                 } else if (params[1].equals("BLACK")) {
                     color = ChessGame.TeamColor.BLACK;
                 }
+                playing = true;
                 return "join";
             } catch (NumberFormatException e) {
                 return "Please specify the game you want to join using it's number in the list. Use the digit, don't type" +

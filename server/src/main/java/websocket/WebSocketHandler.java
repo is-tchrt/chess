@@ -1,6 +1,8 @@
 package websocket;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.*;
@@ -67,7 +69,8 @@ public class WebSocketHandler {
             gameData.game().makeMove(command.getMove());
             gameDao.updateGame(gameData);
             clients.allClientsLoadGame(command.getGameID(), gameData.game());
-            clients.notifyOtherClients(command.getGameID(), client, client.username + " made a move: " + command.getMove());
+            clients.notifyOtherClients(command.getGameID(), client, client.username + " moved " + makePositionHumanReadable(command.getMove().getStartPosition()) +
+                    " to " + makePositionHumanReadable(command.getMove().getEndPosition()) + ".");
             sendCheckStatus(command.getGameID(), gameData.game(), getPlayerColorFromCommand(command, client.username), client);
         } catch (InvalidMoveException e) {
             client.sendError("Error: Invalid move");
@@ -104,8 +107,7 @@ public class WebSocketHandler {
             if (!gameData.game().getInProgress()) {
                 throw new Exception("This game has already ended.");
             }
-            gameData.game().setInProgress(false);
-            gameDao.updateGame(gameData);
+            endGame(command.getGameID());
             clients.notifyAllClients(command.getGameID(), client.username + " has resigned.");
         } catch (Exception e) {
             client.sendError("Error: " + e.getMessage());
@@ -135,9 +137,9 @@ public class WebSocketHandler {
 
     private ChessGame.TeamColor getPlayerColorFromCommand(UserGameCommand command, String username) throws DataAccessException {
         GameData gameData = gameDao.getGame(command.getGameID());
-        if (gameData.blackUsername().equals(username)) {
+        if (gameData.blackUsername() != null && gameData.blackUsername().equals(username)) {
             return ChessGame.TeamColor.BLACK;
-        } else if (gameData.whiteUsername().equals(username)) {
+        } else if (gameData.whiteUsername() != null && gameData.whiteUsername().equals(username)) {
             return ChessGame.TeamColor.WHITE;
         } else {
             return null;
@@ -160,6 +162,9 @@ public class WebSocketHandler {
     private void canMakeMove(MakeMoveCommand command, Client client) throws Exception {
             ChessGame.TeamColor color = getPlayerColorFromCommand(command, client.username);
             ChessGame game = getGameData(command.getGameID()).game();
+            if (game.getBoard().getPiece(command.getMove().getStartPosition()) == null) {
+                throw new Exception("Invalid move");
+            }
             ChessGame.TeamColor moveColor = game.getBoard().getPiece(command.getMove().getStartPosition()).getTeamColor();
             if (!game.getInProgress()) {
                 throw new Exception("This game has already ended.");
@@ -169,19 +174,46 @@ public class WebSocketHandler {
             }
     }
 
-    private void sendCheckStatus(Integer gameID, ChessGame game, ChessGame.TeamColor color, Client client) {
+    private void sendCheckStatus(Integer gameID, ChessGame game, ChessGame.TeamColor color, Client client) throws DataAccessException {
         ChessGame.TeamColor otherColor;
+        if (color == null) {
+            return;
+        }
         if (color.equals(ChessGame.TeamColor.WHITE)) {
             otherColor = ChessGame.TeamColor.BLACK;
         } else if (color.equals(ChessGame.TeamColor.BLACK)) {
             otherColor = ChessGame.TeamColor.WHITE;
         } else {return;}
         if (game.isInCheckmate(otherColor)) {
+            endGame(gameID);
             clients.notifyAllClients(gameID, otherColor.name() + " is in checkmate!");
         } else if (game.isInCheck(otherColor)) {
             clients.notifyAllClients(gameID, otherColor.name() + " is in check.");
         } else if (game.isInStalemate(otherColor)) {
+            endGame(gameID);
             clients.notifyAllClients(gameID, "Stalemate!");
         }
+    }
+
+    private String makePositionHumanReadable(ChessPosition position) {
+        String column = switch (position.getColumn()) {
+            case 1 -> "a";
+            case 2 -> "b";
+            case 3 -> "c";
+            case 4 -> "d";
+            case 5 -> "e";
+            case 6 -> "f";
+            case 7 -> "g";
+            case 8 -> "h";
+            default -> null;
+        };
+        String row = String.valueOf(position.getRow());
+        return column + row;
+    }
+
+    private void endGame(int gameID) throws DataAccessException {
+        GameData gameData = getGameData(gameID);
+        gameData.game().setInProgress(false);
+        gameDao.updateGame(gameData);
     }
 }
