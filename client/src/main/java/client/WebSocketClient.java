@@ -11,13 +11,10 @@ import websocket.messages.LoadServerMessage;
 import websocket.messages.NotificationServerMessage;
 import websocket.messages.ServerMessage;
 
-import javax.websocket.ContainerProvider;
-import javax.websocket.MessageHandler;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
+import javax.websocket.*;
 import java.net.URI;
 
-public class WebSocketClient {
+public class WebSocketClient extends Endpoint {
     private Session session;
     private GamePlayClient gamePlayClient;
 
@@ -26,6 +23,7 @@ public class WebSocketClient {
         URI uri = new URI(url.replace("http", "ws") + "/ws");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
+        sendUserCommand(UserGameCommand.CommandType.CONNECT);
 
         session.addMessageHandler(new MessageHandler.Whole<String>() {
             @Override
@@ -40,30 +38,24 @@ public class WebSocketClient {
         });
     }
 
+    @Override
+    public void onOpen(Session session, EndpointConfig endpointConfig) {
+    }
+
+    public void sendUserCommand(UserGameCommand.CommandType type) {
+        try {
+            UserGameCommand command = new UserGameCommand(type, gamePlayClient.authToken,
+                    gamePlayClient.game.gameID());
+            session.getBasicRemote().sendText(new Gson().toJson(command));
+        } catch (Exception e) {
+            gamePlayClient.printNotification("Error: " + e.getMessage());
+        }
+    }
+
     public void sendMakeMove(ChessMove move) {
         try {
             MakeMoveCommand command = new MakeMoveCommand(UserGameCommand.CommandType.LEAVE, gamePlayClient.authToken,
                     gamePlayClient.game.gameID(), move);
-            session.getBasicRemote().sendText(new Gson().toJson(command));
-        } catch (Exception e) {
-            gamePlayClient.printNotification("Error: " + e.getMessage());
-        }
-    }
-
-    public void sendLeave() {
-        try {
-            UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, gamePlayClient.authToken,
-                    gamePlayClient.game.gameID());
-            session.getBasicRemote().sendText(new Gson().toJson(command));
-        } catch (Exception e) {
-            gamePlayClient.printNotification("Error: " + e.getMessage());
-        }
-    }
-
-    public void sendResign() {
-        try {
-            UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.RESIGN, gamePlayClient.authToken,
-                    gamePlayClient.game.gameID());
             session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch (Exception e) {
             gamePlayClient.printNotification("Error: " + e.getMessage());

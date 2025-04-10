@@ -6,6 +6,8 @@ import model.GameData;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static ui.EscapeSequences.RESET_TEXT_COLOR;
+
 public class PostLoginClient extends Client {
     public PostLoginClient(ServerFacade serverFacade) {
         super(serverFacade);
@@ -39,7 +41,7 @@ public class PostLoginClient extends Client {
                 " specified color\n" +
                 COMMAND_NAME_COLOR + "observe <id>" + COMMAND_DESCRIPTION_COLOR + " - Observe a game\n" +
                 COMMAND_NAME_COLOR + "logout" + COMMAND_DESCRIPTION_COLOR + " - Logout of your account\n" +
-                COMMAND_NAME_COLOR + "quit" + COMMAND_DESCRIPTION_COLOR + " - Exit the application";
+                COMMAND_NAME_COLOR + "quit" + COMMAND_DESCRIPTION_COLOR + " - Exit the application" + RESET_TEXT_COLOR;
     }
 
     private String create(String ... params) {

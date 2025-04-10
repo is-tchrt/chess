@@ -2,6 +2,7 @@ package client;
 
 import chess.*;
 import model.GameData;
+import websocket.commands.UserGameCommand;
 
 import java.util.*;
 
@@ -18,7 +19,7 @@ public class GamePlayClient extends Client {
             throw new RuntimeException(e);
         }
         setGame(new GameData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), new ChessGame()));
-        printBoard();
+//        printBoard();
     }
 
     public GamePlayClient(Client other) {
@@ -28,7 +29,7 @@ public class GamePlayClient extends Client {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        printBoard();
+//        printBoard();
     }
 
     @Override
@@ -55,7 +56,8 @@ public class GamePlayClient extends Client {
                 " row, e.g. a2 a4. If the move will result in a pawn promotion specify the desired type in all lowercase.\n" +
                 COMMAND_NAME_COLOR + "resign" + COMMAND_DESCRIPTION_COLOR + " - Resign the game (Players only)\n" +
                 COMMAND_NAME_COLOR + "highlight <position>" + COMMAND_DESCRIPTION_COLOR + " - Highlight moves for the piece" +
-                " at the given position. Specify the position using a letter for the column and a number for the row, e.g. e1.";
+                " at the given position. Specify the position using a letter for the column and a number for the row, e.g. e1."
+                + RESET_TEXT_COLOR;
     }
 
     public String redraw() {
@@ -63,7 +65,7 @@ public class GamePlayClient extends Client {
     }
 
     public String leave() {
-        webSocketClient.sendLeave();
+        webSocketClient.sendUserCommand(UserGameCommand.CommandType.LEAVE);
         return "leave";
     }
 
@@ -89,7 +91,7 @@ public class GamePlayClient extends Client {
     }
 
     public String resign() {
-        webSocketClient.sendResign();
+        webSocketClient.sendUserCommand(UserGameCommand.CommandType.RESIGN);
         return "You have resigned.";
     }
 
@@ -108,10 +110,12 @@ public class GamePlayClient extends Client {
 
     public void printNotification(String message) {
         System.out.println(message);
+        System.out.print(">>> ");
     }
 
     public void printBoard() {
         System.out.println(getBoardString(game.game().getBoard()));
+        System.out.print(">>> ");
     }
 
     private String getBoardString(ChessBoard board) {

@@ -5,6 +5,8 @@ import model.UserData;
 
 import java.util.Arrays;
 
+import static ui.EscapeSequences.RESET_TEXT_COLOR;
+
 public class PreLoginClient extends Client {
 
     public PreLoginClient(ServerFacade serverFacade) {
@@ -33,7 +35,7 @@ public class PreLoginClient extends Client {
                 COMMAND_NAME_COLOR + "register <username> <password> <email>" + COMMAND_DESCRIPTION_COLOR + " - Create an" +
                 " account\n" +
                 COMMAND_NAME_COLOR + "login <username> <password>" + COMMAND_DESCRIPTION_COLOR + " - Login\n" +
-                COMMAND_NAME_COLOR + "quit" + COMMAND_DESCRIPTION_COLOR + " - Exit the application";
+                COMMAND_NAME_COLOR + "quit" + COMMAND_DESCRIPTION_COLOR + " - Exit the application" + RESET_TEXT_COLOR;
     }
 
     private String register(String ... params) {
