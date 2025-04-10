@@ -78,6 +78,9 @@ public class GamePlayClient extends Client {
         }
         ChessPosition startPosition = parsePositionParameter(params[0]);
         ChessPosition endPosition = parsePositionParameter(params[1]);
+        if (startPosition == null || endPosition == null) {
+            return "The provided arguments are the wrong format. Please try again.";
+        }
         ChessPiece.PieceType promotionPiece;
         if (params.length < 3) {
             promotionPiece = null;
@@ -94,7 +97,11 @@ public class GamePlayClient extends Client {
 
     public String resign() {
         if (playing) {
-            webSocketClient.sendUserCommand(UserGameCommand.CommandType.RESIGN);
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Are you sure you want to resign?\n>>> ");
+            if (scanner.nextLine().equals("yes")) {
+                webSocketClient.sendUserCommand(UserGameCommand.CommandType.RESIGN);
+            }
             return "";
         } else {
             return "Only players can resign.";
