@@ -85,8 +85,7 @@ public class GamePlayClient extends Client {
             return "The highlight command takes an argument specifying a board position, e.g. f7.";
         }
         Collection<ChessMove> validMoves = game.game().validMoves(position);
-        String board = getHighlightedBoardString(game.game().getBoard(), position, getEndPositions(validMoves));
-        return "";
+        return getHighlightedBoardString(game.game().getBoard(), position, getEndPositions(validMoves));
     }
 
     public void printNotification(String message) {
