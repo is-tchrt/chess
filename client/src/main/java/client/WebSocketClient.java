@@ -1,8 +1,10 @@
 package client;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import com.google.gson.Gson;
 import model.GameData;
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorServerMessage;
 import websocket.messages.LoadServerMessage;
@@ -36,6 +38,16 @@ public class WebSocketClient {
                 }
             }
         });
+    }
+
+    public void sendMakeMove(ChessMove move) {
+        try {
+            MakeMoveCommand command = new MakeMoveCommand(UserGameCommand.CommandType.LEAVE, gamePlayClient.authToken,
+                    gamePlayClient.game.gameID(), move);
+            session.getBasicRemote().sendText(new Gson().toJson(command));
+        } catch (Exception e) {
+            gamePlayClient.printNotification("Error: " + e.getMessage());
+        }
     }
 
     public void sendLeave() {

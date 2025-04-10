@@ -39,7 +39,7 @@ public class GamePlayClient extends Client {
         return switch (command) {
             case "redraw" -> redraw();
             case "leave" -> leave();
-            case "move" -> move();
+            case "move" -> move(parameters);
             case "resign" -> resign();
             case "highlight" -> highlight(parameters);
             default -> help();
@@ -50,11 +50,12 @@ public class GamePlayClient extends Client {
         return COMMAND_NAME_COLOR + "help" + COMMAND_DESCRIPTION_COLOR + " - Display possible commands\n" +
                 COMMAND_NAME_COLOR + "redraw" + COMMAND_DESCRIPTION_COLOR + " - Redraw the board\n" +
                 COMMAND_NAME_COLOR + "leave" + COMMAND_DESCRIPTION_COLOR + " - Leave the game\n" +
-                COMMAND_NAME_COLOR + "move <id> <WHITE|BLACK>" + COMMAND_DESCRIPTION_COLOR + " - make the specified move" +
-                " (Players only)" +
+                COMMAND_NAME_COLOR + "move <start position> <end position> <promotion type>" + COMMAND_DESCRIPTION_COLOR + " - make the" +
+                " specified move (Players only). Specify the positions using a letter for the column and a number for the" +
+                " row, e.g. a2 a4. If the move will result in a pawn promotion specify the desired type in all lowercase.\n" +
                 COMMAND_NAME_COLOR + "resign" + COMMAND_DESCRIPTION_COLOR + " - Resign the game (Players only)\n" +
                 COMMAND_NAME_COLOR + "highlight <position>" + COMMAND_DESCRIPTION_COLOR + " - Highlight moves for the piece" +
-                " at the given position. List the position using a letter for the column and a number for the row, e.g. e1.";
+                " at the given position. Specify the position using a letter for the column and a number for the row, e.g. e1.";
     }
 
     public String redraw() {
@@ -66,8 +67,25 @@ public class GamePlayClient extends Client {
         return "leave";
     }
 
-    public String move() {
-        throw new RuntimeException("Not implemented");
+    public String move(String ... params) {
+        if (params.length < 2 || params.length > 3) {
+            return "The move command takes two or three arguments, the current position of the piece you want to move and" +
+                    " the position you want to move it to, and optionally the type a pawn will be promoted to. Please try again.";
+        }
+        ChessPosition startPosition = parsePositionParameter(params[0]);
+        ChessPosition endPosition = parsePositionParameter(params[1]);
+        ChessPiece.PieceType promotionPiece;
+        if (params.length < 3) {
+            promotionPiece = null;
+        } else {
+            promotionPiece = getPromotionPiece(params[2]);
+            if (promotionPiece == null) {
+                return "Invalid promotion type. Please try again.";
+            }
+        }
+        ChessMove move = new ChessMove(startPosition, endPosition, promotionPiece);
+        webSocketClient.sendMakeMove(move);
+        return "";
     }
 
     public String resign() {
@@ -220,5 +238,15 @@ public class GamePlayClient extends Client {
             positions.add(move.getEndPosition());
         }
         return positions;
+    }
+
+    ChessPiece.PieceType getPromotionPiece(String type) {
+        return switch (type) {
+            case "queen" -> ChessPiece.PieceType.QUEEN;
+            case "rook" -> ChessPiece.PieceType.ROOK;
+            case "bishop" -> ChessPiece.PieceType.BISHOP;
+            case "knight" -> ChessPiece.PieceType.KNIGHT;
+            default -> null;
+        };
     }
 }
